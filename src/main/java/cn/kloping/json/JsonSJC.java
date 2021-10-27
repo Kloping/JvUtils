@@ -1,4 +1,4 @@
-package cn.kloping;
+package cn.kloping.json;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -69,7 +69,6 @@ public class JsonSJC {
     /**
      * 解析一个json对象 且 不带包名
      *
-     * @param jsonObject
      * @param name       主类名称 例如:Main 生成 (Main.java)
      * @param show       是否显示错误
      * @param withStatic 是否需要静态类
@@ -123,7 +122,7 @@ public class JsonSJC {
     /**
      * 解析一个json对象
      *
-     * @param jsonObject
+     * @param jsonObject json对象
      * @param path       解析后生成的对象储存路劲
      * @param name       主类名称 例如:Main 生成 (Main.java)
      * @param packageN   包名
@@ -178,7 +177,7 @@ public class JsonSJC {
     /**
      * 解析一个json对象 且 不带包名
      *
-     * @param jsonObject
+     * @param jsonObject JSON对象
      * @param name       主类名称 例如:Main 生成 (Main.java)
      * @param show       是否显示错误
      * @param withStatic 是否需要静态类
