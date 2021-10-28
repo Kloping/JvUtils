@@ -32,8 +32,8 @@ public class FileUtils {
     /**
      * 从File获取String
      *
-     * @param path
-     * @return
+     * @param path 路径
+     * @return str
      */
     public static String getStringFromFile(String path) {
         try {
@@ -51,8 +51,8 @@ public class FileUtils {
     /**
      * 从文件中获取byte数组
      *
-     * @param path
-     * @return
+     * @param path path
+     * @return byte[]
      */
     public static byte[] getBytesFromFile(String path) {
         try {
@@ -70,9 +70,9 @@ public class FileUtils {
     /**
      * 将一串字符写入 File
      *
-     * @param str
-     * @param path
-     * @param name
+     * @param str str
+     * @param path path
+     * @param name name
      */
     public static void putStringInFile(String str, String path, String name) {
         try {
@@ -90,8 +90,8 @@ public class FileUtils {
     /**
      * 将一串字符写入 File
      *
-     * @param str
-     * @param file
+     * @param str str
+     * @param file file
      */
     public static void putStringInFile(String str, File file) {
         try {

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebParm {
     /**
      * 将浏览器 的 请求 Cookie 参数 分割 转为 .cookie(k,v) 的 Jsoup 语句
-     * @param line
+     * @param line line
      * @return 代码句
      */
     public static String Cookie2JsoupParm(String line) {
@@ -31,7 +31,7 @@ public class WebParm {
 
     /**
      * 将浏览器 的 请求 Header 多行 参数 分割 转为 .header(k,v) 的 Jsoup 语句
-     * @param line
+     * @param line line
      * @return 代码句
      */
     public static String Header2JsoupParm(String line) {
@@ -61,9 +61,9 @@ public class WebParm {
     }
 
     /**
-     * 以 & 分割 get 路径 以便观察
-     * @param line
-     * @return
+     * 以 and 符号 分割 get 路径 以便观察
+     * @param line line
+     * @return str
      */
     public static String WebGetPathView(String line) {
         if (line.contains("?")) line = line.substring(line.indexOf("?") + 1);

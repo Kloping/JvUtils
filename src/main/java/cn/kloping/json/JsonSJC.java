@@ -18,7 +18,7 @@ public class JsonSJC {
     /**
      * 解析一个json对象
      *
-     * @param jsonObject
+     * @param jsonObject json对象
      * @param path       解析后生成的对象储存路劲
      * @param name       主类名称 例如:Main 生成 (Main.java)
      * @param packageN   包名

@@ -7,8 +7,8 @@ public class StringUtils {
     /**
      * 过滤数组中 以 str 开头的 元素
      *
-     * @param sss
-     * @param str
+     * @param sss 原数组
+     * @param str str
      * @return 处理后的
      */
     public static String[] filterStartWith(String[] sss, String str) {
@@ -23,7 +23,7 @@ public class StringUtils {
     /**
      * 将一串 String 数组 连接成一个 String
      *
-     * @param sss
+     * @param sss 原数组
      * @return 处理后的
      */
     public static String connectStrings(String... sss) {
