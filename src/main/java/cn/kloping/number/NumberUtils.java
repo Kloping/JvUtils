@@ -182,12 +182,10 @@ public class NumberUtils {
     }
 
     private static final Map<Character, Integer> char2int = new ConcurrentHashMap<>();
-    private static final Map<Integer, Character> int2char = new ConcurrentHashMap<>();
 
     static {
         int i = 1;
         for (char c : new Character[]{'一', '二', '三', '四', '五', '六', '七', '八', '九', '十'}) {
-            int2char.put(i, c);
             char2int.put(c, i);
             i++;
         }
