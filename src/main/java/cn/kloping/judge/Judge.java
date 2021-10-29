@@ -9,7 +9,7 @@ public class Judge {
      * @return
      */
     public static boolean isNotEmpty(String str) {
-        return str == null || str.trim().isEmpty();
+        return !(str == null || str.trim().isEmpty());
     }
 
     /**
