@@ -8,27 +8,41 @@ public class ObjectUtils {
      * 所有基本类型转化为 包装类型
      * byte short int long float double boolean char
      *
-     * @param objects 转换前
+     * @param object 转换前
      * @return 转换后的
      */
-    public static Object[] baseToPack(Object[] objects) {
+    public static Object baseToPack(Object object) {
+        if (object.getClass() == byte.class) {
+            object = Byte.valueOf(String.valueOf(object));
+        } else if (object.getClass() == short.class) {
+            object = Short.valueOf(String.valueOf(object));
+        } else if (object.getClass() == int.class) {
+            object = Integer.valueOf(String.valueOf(object));
+        } else if (object.getClass() == long.class) {
+            object = Long.valueOf(String.valueOf(object));
+        } else if (object.getClass() == boolean.class) {
+            object = Boolean.valueOf(String.valueOf(object));
+        } else if (object.getClass() == float.class) {
+            object = Float.valueOf(String.valueOf(object));
+        } else if (object.getClass() == double.class) {
+            object = Double.valueOf(String.valueOf(object));
+        } else if (object.getClass() == char.class) {
+            object = Character.valueOf((char) object);
+        }
+        return object;
+    }
+
+    /**
+     * 所有基本类型转化为 包装类型
+     * byte short int long float double boolean char
+     *
+     * @param objects
+     * @return
+     */
+    public static Object[] baseToPack(Object... objects) {
         Object[] objects1 = new Object[objects.length];
         for (int i = 0; i < objects.length; i++) {
-            if (objects[i].getClass() == byte.class) {
-                objects1[i] = Byte.valueOf(String.valueOf(objects[i]));
-            } else if (objects[i].getClass() == short.class) {
-                objects1[i] = Short.valueOf(String.valueOf(objects[i]));
-            } else if (objects[i].getClass() == int.class) {
-                objects1[i] = Integer.valueOf(String.valueOf(objects[i]));
-            } else if (objects[i].getClass() == long.class) {
-                objects1[i] = Long.valueOf(String.valueOf(objects[i]));
-            } else if (objects[i].getClass() == boolean.class) {
-                objects1[i] = Boolean.valueOf(String.valueOf(objects[i]));
-            } else if (objects[i].getClass() == float.class) {
-                objects1[i] = Float.valueOf(String.valueOf(objects[i]));
-            } else if (objects[i].getClass() == double.class) {
-                objects1[i] = Double.valueOf(String.valueOf(objects[i]));
-            } else objects1[i] = objects[i];
+            objects1[i] = baseToPack(objects[i]);
         }
         return objects1;
     }
@@ -50,6 +64,20 @@ public class ObjectUtils {
         if (cla == double.class) return Double.class;
         return cla;
     }
+
+    /**
+     * 基本类型class转包装class
+     *
+     * @param clas
+     * @return
+     */
+    public static Class<?>[] baseToPack(Class<?>... clas) {
+        for (int i = 0; i < clas.length; i++) {
+            clas[i] = baseToPack(clas[i]);
+        }
+        return clas;
+    }
+
 
     /**
      * 判断是否 为 子类型
@@ -93,7 +121,7 @@ public class ObjectUtils {
     /**
      * index array 元素
      *
-     * @param o 元素
+     * @param o       元素
      * @param objects 元素组
      * @return 第几个
      */
