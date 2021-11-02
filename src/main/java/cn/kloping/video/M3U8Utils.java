@@ -41,6 +41,7 @@ public class M3U8Utils implements Runnable {
     public M3U8Utils(String[] urls, int threadNum, File outFile) {
         this.outFile = outFile;
         this.threadNum = threadNum;
+        this.urls = urls;
     }
 
     /**

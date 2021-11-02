@@ -47,13 +47,14 @@ public class UrlUtils {
      */
     public static byte[] getBytesFromHttpUrl(String url) {
         try {
-            URLConnection connection = new URL(url).openConnection();
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
-            connection.connect();
-            connection.getOutputStream().flush();
-            InputStream is = connection.getInputStream();
+//            URLConnection connection = new URL(url).openConnection();
+//            connection.setDoOutput(true);
+//            connection.setDoInput(true);
+//            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
+//            connection.connect();
+//            connection.getOutputStream().flush();
+            InputStream is=new URL(url).openStream();
+//            is = connection.getInputStream();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024 * 1024];
             int len = -1;
