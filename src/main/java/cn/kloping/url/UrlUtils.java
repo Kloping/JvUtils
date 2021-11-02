@@ -2,6 +2,7 @@ package cn.kloping.url;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,7 +18,13 @@ public class UrlUtils {
      */
     public static String getStringFromHttpUrl(boolean k, String url) {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+            URLConnection connection = new URL(url).openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
+            connection.connect();
+            connection.getOutputStream().flush();
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line = "";
             while ((line = br.readLine()) != null) {
@@ -40,7 +47,13 @@ public class UrlUtils {
      */
     public static byte[] getBytesFromHttpUrl(String url) {
         try {
-            InputStream is = new URL(url).openStream();
+            URLConnection connection = new URL(url).openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
+            connection.connect();
+            connection.getOutputStream().flush();
+            InputStream is = connection.getInputStream();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024 * 1024];
             int len = -1;
@@ -104,8 +117,13 @@ public class UrlUtils {
     }
 
     private static void startDownload(String urlStr, ByteArrayOutputStream baos) throws IOException {
-        URL url = new URL(urlStr);
-        InputStream is = url.openStream();
+        URLConnection connection = new URL(urlStr).openConnection();
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
+        connection.connect();
+        connection.getOutputStream().flush();
+        InputStream is = connection.getInputStream();
         byte[] bytes = new byte[1024 * 1024];
         int len = -1;
         while ((len = is.read(bytes)) != -1) {
