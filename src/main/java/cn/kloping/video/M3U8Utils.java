@@ -1,9 +1,13 @@
 package cn.kloping.video;
 
+import cn.kloping.string.StringUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +23,7 @@ public class M3U8Utils implements Runnable {
     private int threadNum = 10;
     private PrintStream out = System.out;
     private File outFile;
+    private int mode = 1;
 
     /**
      * 构造参数
@@ -66,7 +71,7 @@ public class M3U8Utils implements Runnable {
      */
     public M3U8Utils(String m3u8Url, int threadNum, File outFile) throws IOException {
         this.outFile = outFile;
-        this.urls = cn.kloping.url.UrlUtils.getStringFromHttpUrl(true, m3u8Url).split("\n");
+        this.urls = StringUtils.filterStartWith(new String(cn.kloping.url.UrlUtils.getBytesFromHttpUrl(m3u8Url)).split("\n"), "#");
         this.threadNum = threadNum;
     }
 
@@ -81,6 +86,64 @@ public class M3U8Utils implements Runnable {
 
     @Override
     public void run() {
+        if (mode == 1)
+            run1();
+        else if (mode == 2)
+            run2();
+    }
+
+    private void run2() {
+        threads = Executors.newFixedThreadPool(threadNum);
+        cdl = new CountDownLatch(urls.length);
+        Map<Integer, byte[]> bytesMap = new ConcurrentHashMap<>();
+        for (String s1 : urls) {
+            int finalI = getIndex();
+            threads.execute(() -> {
+                out.println("开始下载第" + finalI);
+                byte[] bytes = cn.kloping.url.UrlUtils.getBytesFromHttpUrl(s1);
+                bytesMap.put(finalI, bytes);
+                out.println("完成下载第" + finalI);
+                try {
+                    write(bytesMap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                cdl.countDown();
+            });
+        }
+        try {
+            cdl.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        out.println("下载完成");
+    }
+
+    /**
+     * 设置模式 仅为 1 2
+     * 1: 将全部下载到内存 最后写出 到 文件
+     * 2: 即时写入 文件 可能影响性能
+     *
+     * @param mode
+     */
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    private int upIndex = -1;
+
+    private synchronized void write(Map<Integer, byte[]> bytesMap) throws Exception {
+        FileOutputStream fos = new FileOutputStream(outFile, true);
+        while (bytesMap.containsKey(upIndex + 1)) {
+            byte[] bytes = bytesMap.get(upIndex + 1);
+            fos.write(bytes);
+            bytesMap.remove(upIndex + 1);
+            upIndex++;
+        }
+        fos.close();
+    }
+
+    private void run1() {
         threads = Executors.newFixedThreadPool(threadNum);
         cdl = new CountDownLatch(urls.length);
         byte[][] bytess = new byte[urls.length][];

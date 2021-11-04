@@ -33,4 +33,18 @@ public class StringUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * 所有字符串之前加
+     *
+     * @param with
+     * @param sss
+     * @return
+     */
+    public static String[] appendAll(String with, String... sss) {
+        for (int i = 0; i < sss.length; i++) {
+            sss[i] = with + sss[i];
+        }
+        return sss;
+    }
 }
