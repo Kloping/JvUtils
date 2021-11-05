@@ -6,7 +6,7 @@ import java.net.URLConnection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static cn.kloping.judge.Judge.isNotEmpty;
+import static cn.kloping.judge.Judge.isEmpty;
 
 public class UrlUtils {
     /**
@@ -68,14 +68,7 @@ public class UrlUtils {
      */
     public static byte[] getBytesFromHttpUrl(String url) {
         try {
-//            URLConnection connection = new URL(url).openConnection();
-//            connection.setDoOutput(true);
-//            connection.setDoInput(true);
-//            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
-//            connection.connect();
-//            connection.getOutputStream().flush();
             InputStream is = new URL(url).openStream();
-//            is = connection.getInputStream();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024 * 1024];
             int len = -1;
@@ -100,7 +93,7 @@ public class UrlUtils {
     public static void downloadFile(String urlStr, String fileName) {
         threads.execute(() -> {
             try {
-                if (isNotEmpty(urlStr) || isNotEmpty(fileName)) return;
+                if (isEmpty(urlStr) || isEmpty(fileName)) return;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 startDownload(urlStr, baos);
                 File file = new File(fileName);
@@ -124,7 +117,7 @@ public class UrlUtils {
     public static void downloadFile(String urlStr, File file) {
         threads.execute(() -> {
             try {
-                if (file == null || isNotEmpty(urlStr)) return;
+                if (file == null || isEmpty(urlStr)) return;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 startDownload(urlStr, baos);
                 file.getParentFile().mkdirs();

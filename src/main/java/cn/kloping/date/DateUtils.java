@@ -56,12 +56,10 @@ public class DateUtils {
      */
     public static long getTimeStamp(String format) {
         try {
-            return sf_0.parse(format).getTime()-System.currentTimeMillis();
+            return sf_0.parse(format).getTime() - System.currentTimeMillis();
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return -1;
     }
-
-
 }
