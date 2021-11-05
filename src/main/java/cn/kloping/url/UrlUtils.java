@@ -40,6 +40,27 @@ public class UrlUtils {
     }
 
     /**
+     * 从网络上获取资源
+     *
+     * @param url
+     * @return
+     */
+    public static String getStringFromHttpUrl(String url) {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+            StringBuilder sb = new StringBuilder();
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 从网络上获取bytes
      *
      * @param url 网址
@@ -53,7 +74,7 @@ public class UrlUtils {
 //            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
 //            connection.connect();
 //            connection.getOutputStream().flush();
-            InputStream is=new URL(url).openStream();
+            InputStream is = new URL(url).openStream();
 //            is = connection.getInputStream();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024 * 1024];
