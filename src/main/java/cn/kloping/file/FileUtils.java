@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import static cn.kloping.judge.Judge.isNotNull;
 
@@ -90,7 +91,7 @@ public class FileUtils {
     /**
      * 从File获取String 并 过滤 以 filter 开头的行元素
      *
-     * @param path 路径
+     * @param path   路径
      * @param filter 过滤 以其开头的
      * @return
      */
@@ -171,5 +172,48 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 创建缓存文件
+     *
+     * @param bytes 数据
+     * @return tempFile
+     * @throws IOException
+     */
+    public static File createTempFile(byte[] bytes) throws IOException {
+        File file = File.createTempFile("temp" + UUID.randomUUID(), "");
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(bytes);
+        fos.close();
+        return file;
+    }
+
+    /**
+     * 创建缓存文件
+     *
+     * @param bytes  数据
+     * @param suffix 后缀
+     * @return tempFile
+     * @throws IOException
+     */
+    public static File createTempFile(byte[] bytes, String suffix) throws IOException {
+        File file = File.createTempFile("temp-" + UUID.randomUUID(), suffix);
+        return file = writeBytesToFile(bytes, file);
+    }
+
+    /**
+     * 将数据写到File
+     *
+     * @param bytes 数据
+     * @param file  文件
+     * @return 文件
+     * @throws IOException
+     */
+    public static File writeBytesToFile(byte[] bytes, File file) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(bytes);
+        fos.close();
+        return file;
     }
 }

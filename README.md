@@ -20,3 +20,4 @@ Use Maven dependency
 - url 网络相关
 - video 视频相关
 - other 其他
+- class class 相关
