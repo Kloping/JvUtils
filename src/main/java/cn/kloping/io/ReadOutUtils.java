@@ -6,36 +6,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-/**
- * 使用示例
- * 如果 格式乱 请点开
- * ```
- *
- *         ReadOutputStream readOutputStream = connectIO(System.out);
- *
- *         System.setOut(new PrintStream(readOutputStream.getOs()));
- *
- *         new Thread(() -> {
- *             try {
- *                 PrintWriter pw = new PrintWriter(new FileOutputStream("./out.txt"), true);
- *                 while (true) {
- *                     String m1 = readOutputStream.readLine();
- *                     pw.println(m1);
- *                 }
- *             } catch (FileNotFoundException e) {
- *                 e.printStackTrace();
- *             }
- *         }).start();
- *
- *         new Thread(() -> {
- *             Scanner sc = new Scanner(System.in);
- *             while (true) {
- *                 String line = sc.nextLine();
- *                 System.out.println(line);
- *             }
- *         }).start();
- * ```
- */
+
 public class ReadOutUtils {
 
     public static class ReadOutputStream {

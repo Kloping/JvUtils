@@ -5,7 +5,7 @@ Use Maven dependency
     <dependency>
         <groupId>io.github.Kloping</groupId>
         <artifactId>JvUtils</artifactId>
-        <version>0.1.2</version>
+        <version>0.1.4</version>
     </dependency>
 
 - date 日期相关
@@ -21,5 +21,5 @@ Use Maven dependency
 - video 视频相关
 - other 其他
 - class class 相关
-
+- io 
 
