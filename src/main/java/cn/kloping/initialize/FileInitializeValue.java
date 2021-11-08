@@ -1,6 +1,8 @@
 package cn.kloping.initialize;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,6 +103,26 @@ public class FileInitializeValue {
         return value;
     }
 
+    /**
+     * 将值写入 文件
+     *
+     * @param path   路径
+     * @param value  值
+     * @param <T>
+     * @param format 是否格式化 (占用空间大)
+     * @return 值
+     */
+    public static <T extends Object> T putValues(String path, T value, boolean format) {
+        try {
+            File file = new File(path);
+            testFile(file);
+            putStringInFile(toPar(value, format), file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
     private static <T> T toValue(String par, T defaultV) {
         try {
             defaultV = (T) JSONObject.parseObject(par, defaultV.getClass());
@@ -114,6 +136,18 @@ public class FileInitializeValue {
         try {
             Object object = JSONObject.toJSON(v);
             return object.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v.toString();
+    }
+
+    private static <T> String toPar(T v, boolean format) {
+        try {
+            if (!format) return toPar(v);
+            String serJson = JSON.toJSONString(v, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
+                    SerializerFeature.WriteDateUseDateFormat);
+            return serJson;
         } catch (Exception e) {
             e.printStackTrace();
         }
