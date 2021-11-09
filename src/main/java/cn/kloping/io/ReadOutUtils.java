@@ -8,11 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ReadOutUtils {
-
+    /**
+     * setMode 0 当 写到 byte 13 10 作为 一行 win
+     * setMode 1 当 写到 byte 10 作为 一行 liunx
+     */
     public static class ReadOutputStream {
         private ByteArrayOutputStream baos = new ByteArrayOutputStream();
         public OutputStream os;
         private final List<String> que;
+        private int mode = 0;
 
         public OutputStream getOs() {
             return os;
@@ -30,22 +34,41 @@ public class ReadOutUtils {
             this.os = os;
         }
 
+        public void setMode(int mode) {
+            this.mode = mode;
+        }
+
         private int i1;
 
         public int write(byte b) {
             baos.write(b);
             int i2 = i1;
             i1 = b;
-            if (i1 == 10 && i2 == 13) {
-                try {
-                    String line = baos.toString("utf-8").trim();
-                    baos.reset();
-                    synchronized (que) {
-                        que.add(line);
-                        que.notifyAll();
+            if (mode == 0) {
+                if (i1 == 10 && i2 == 13) {
+                    try {
+                        String line = baos.toString("utf-8").trim();
+                        baos.reset();
+                        synchronized (que) {
+                            que.add(line);
+                            que.notifyAll();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }
+            } else if (mode == 1) {
+                if (i1 == 10) {
+                    try {
+                        String line = baos.toString("utf-8").trim();
+                        baos.reset();
+                        synchronized (que) {
+                            que.add(line);
+                            que.notifyAll();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             return i1;
