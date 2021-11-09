@@ -81,11 +81,14 @@ public class ReadOutUtils {
             @Override
             public void write(int b) throws IOException {
                 os.write(b);
+                readOutputStream.write((byte) b);
             }
 
             @Override
             public void write(byte[] b) throws IOException {
                 os.write(b);
+                for (byte b1 : b)
+                    readOutputStream.write(b1);
             }
 
             @Override
@@ -96,20 +99,6 @@ public class ReadOutUtils {
             @Override
             public void close() throws IOException {
                 os.close();
-            }
-
-            @Override
-            public void write(byte[] b, int off, int len) throws IOException {
-                os.write(b, off, len);
-                if ((off < 0) || (off > b.length) || (len < 0) ||
-                        ((off + len) > b.length) || ((off + len) < 0)) {
-                    throw new IndexOutOfBoundsException();
-                } else if (len == 0) {
-                    return;
-                }
-                for (int i = 0; i < len; i++) {
-                    readOutputStream.write(b[off + i]);
-                }
             }
         });
         return readOutputStream;

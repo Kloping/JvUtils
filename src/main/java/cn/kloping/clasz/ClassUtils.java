@@ -2,12 +2,20 @@ package cn.kloping.clasz;
 
 import cn.kloping.map.MapUtils;
 
+import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author qq-3474006766
+ */
 public class ClassUtils {
     public static class ClassEntity {
         public Method[] methods;
@@ -41,7 +49,9 @@ public class ClassUtils {
      * @throws Exception
      */
     public static ClassEntity createClassEntity(byte[] bytes, String className) throws Exception {
+        defineClassMethod.setAccessible(true);
         Class<?> cla = (Class<?>) defineClassMethod.invoke(ClassLoader.getSystemClassLoader(), className, bytes, 0, bytes.length);
+        defineClassMethod.setAccessible(false);
         ClassEntity entity = new ClassEntity();
         entity.methods = getAllMethod(cla);
         entity.fields = getAllField(cla);
@@ -77,4 +87,46 @@ public class ClassUtils {
             method.setAccessible(true);
         return fields;
     }
+
+    private static final URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+
+    private static Method addURLMethod;
+
+    static {
+        try {
+            addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            addURLMethod.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 此方法仅适用于 java8
+     * 用作将一个jar包加载到系统 类路径
+     *
+     * @param file
+     * @return 未知
+     * @throws MalformedURLException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public static Object addClassFileInSystem(File file) throws MalformedURLException, InvocationTargetException, IllegalAccessException {
+        return addURLMethod.invoke(systemClassLoader, file.getParentFile().toURI().toURL());
+    }
+
+    /**
+     * 此方法仅适用于 java8
+     * 将一个含 class 文件的 文件夹 加载到 系统类路径
+     *
+     * @param file
+     * @return 未知
+     * @throws MalformedURLException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public static Object addJarFileInSystem(File file) throws MalformedURLException, InvocationTargetException, IllegalAccessException {
+        return addURLMethod.invoke(systemClassLoader, file.toURI().toURL());
+    }
+
 }
