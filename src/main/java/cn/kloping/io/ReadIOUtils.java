@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ReadOutUtils {
+public class ReadIOUtils {
     /**
      * setMode 0 当 写到 byte 13 10 作为 一行 win
      * setMode 1 当 写到 byte 10 作为 一行 liunx
@@ -15,7 +15,6 @@ public class ReadOutUtils {
     public static class ReadOutputStream {
         private ByteArrayOutputStream baos = new ByteArrayOutputStream();
         public OutputStream os;
-        private final List<String> que;
         private int mode = 0;
 
         public OutputStream getOs() {
@@ -26,11 +25,13 @@ public class ReadOutUtils {
             return que;
         }
 
-        public ReadOutputStream() {
+        private final List<String> que;
+
+        private ReadOutputStream() {
             que = Collections.synchronizedList(new LinkedList<>());
         }
 
-        public void setOs(OutputStream os) {
+        private void setOs(OutputStream os) {
             this.os = os;
         }
 
@@ -40,7 +41,7 @@ public class ReadOutUtils {
 
         private int i1;
 
-        public int write(byte b) {
+        private int write(byte b) {
             baos.write(b);
             int i2 = i1;
             i1 = b;
@@ -48,6 +49,7 @@ public class ReadOutUtils {
                 if (i1 == 10 && i2 == 13) {
                     try {
                         String line = baos.toString("utf-8").trim();
+                        line = line.substring(0, line.length() - 2);
                         baos.reset();
                         synchronized (que) {
                             que.add(line);
@@ -60,7 +62,8 @@ public class ReadOutUtils {
             } else if (mode == 1) {
                 if (i1 == 10) {
                     try {
-                        String line = baos.toString("utf-8").trim();
+                        String line = baos.toString("utf-8");
+                        line = line.substring(0, line.length() - 1);
                         baos.reset();
                         synchronized (que) {
                             que.add(line);
@@ -88,6 +91,13 @@ public class ReadOutUtils {
                 }
             return que.get(que.size() - 1);
         }
+
+        public void clearCache() {
+            synchronized (que) {
+                que.clear();
+                index = 0;
+            }
+        }
     }
 
     /**
@@ -98,7 +108,7 @@ public class ReadOutUtils {
      * @param os 输出流
      * @return 实例
      */
-    public static ReadOutputStream connectIO(OutputStream os) {
+    public static ReadOutputStream connectOs(OutputStream os) {
         ReadOutputStream readOutputStream = new ReadOutputStream();
         readOutputStream.setOs(new OutputStream() {
             @Override
@@ -126,4 +136,6 @@ public class ReadOutUtils {
         });
         return readOutputStream;
     }
+    //================================================================
+
 }
