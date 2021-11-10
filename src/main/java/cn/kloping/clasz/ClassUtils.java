@@ -30,7 +30,7 @@ public class ClassUtils {
         }
     }
 
-    private static Method defineClassMethod;
+    public static Method defineClassMethod;
 
     static {
         try {
@@ -89,9 +89,9 @@ public class ClassUtils {
         return fields;
     }
 
-    private static final URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+    public static final URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
-    private static Method addURLMethod;
+    public static Method addURLMethod;
 
     static {
         try {
@@ -137,7 +137,7 @@ public class ClassUtils {
      * @param <T>
      * @return 创建失败 则为 null
      */
-    private static <T> T newInstance(Class<T> cla) {
+    public static <T> T newInstance(Class<T> cla) {
         Constructor<?>[] constructors = cla.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
             try {
@@ -160,7 +160,7 @@ public class ClassUtils {
      * @param <T>
      * @return 创建失败 则为 null
      */
-    private static <T> T newInstance(Class<T> cla, Object... objects) {
+    public static <T> T newInstance(Class<T> cla, Object... objects) {
         Constructor<?>[] constructors = cla.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
             try {
