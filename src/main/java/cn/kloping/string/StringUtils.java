@@ -47,4 +47,16 @@ public class StringUtils {
         }
         return sss;
     }
+
+    /**
+     * 将某字符串 去除一次指定的 一些字符
+     * @param oStr 源字符串
+     * @param ss 要去除的
+     * @return 处理完的字符串
+     */
+    public static String removeStr(String oStr, String... ss) {
+        for (String s : ss)
+            oStr = oStr.replace(s, "");
+        return oStr;
+    }
 }

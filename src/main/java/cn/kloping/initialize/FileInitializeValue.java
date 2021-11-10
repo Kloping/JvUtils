@@ -50,7 +50,7 @@ public class FileInitializeValue {
             Class<?> cla = baseToPack(defaultV.getClass());
             String str = getStringFromFile(path, "//");
             if (!isNotEmpty(str)) {
-                putStringInFile(toPar(defaultV), new File(path));
+                putStringInFile(toPar(defaultV, true), new File(path));
                 return defaultV;
             }
             return toValue(str, defaultV);
@@ -96,7 +96,7 @@ public class FileInitializeValue {
         try {
             File file = new File(path);
             testFile(file);
-            putStringInFile(toPar(value), file);
+            putStringInFile(toPar(value, true), file);
         } catch (IOException e) {
             e.printStackTrace();
         }

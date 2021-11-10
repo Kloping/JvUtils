@@ -3,6 +3,7 @@ package cn.kloping.clasz;
 import cn.kloping.map.MapUtils;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -129,4 +130,48 @@ public class ClassUtils {
         return addURLMethod.invoke(systemClassLoader, file.toURI().toURL());
     }
 
+    /**
+     * 强制调用 该类的 无参构造
+     *
+     * @param cla 要构造类
+     * @param <T>
+     * @return 创建失败 则为 null
+     */
+    private static <T> T newInstance(Class<T> cla) {
+        Constructor<?>[] constructors = cla.getDeclaredConstructors();
+        for (Constructor<?> constructor : constructors) {
+            try {
+                if (constructor.getParameterCount() == 0) {
+                    constructor.setAccessible(true);
+                    return (T) constructor.newInstance();
+                }
+            } catch (Exception e) {
+                continue;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 强制调用 该类的 有参参构造
+     *
+     * @param cla     类对象
+     * @param objects 参数
+     * @param <T>
+     * @return 创建失败 则为 null
+     */
+    private static <T> T newInstance(Class<T> cla, Object... objects) {
+        Constructor<?>[] constructors = cla.getDeclaredConstructors();
+        for (Constructor<?> constructor : constructors) {
+            try {
+                if (constructor.getParameterCount() == objects.length) {
+                    constructor.setAccessible(true);
+                    return (T) constructor.newInstance(objects);
+                }
+            } catch (Exception e) {
+                continue;
+            }
+        }
+        return null;
+    }
 }
