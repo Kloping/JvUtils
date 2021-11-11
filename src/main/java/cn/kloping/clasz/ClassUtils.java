@@ -89,15 +89,16 @@ public class ClassUtils {
         return fields;
     }
 
-    public static final URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+    public static URLClassLoader systemClassLoader;
 
     public static Method addURLMethod;
 
     static {
         try {
+            systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
             addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             addURLMethod.setAccessible(true);
-        } catch (NoSuchMethodException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
