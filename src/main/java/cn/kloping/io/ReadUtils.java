@@ -3,6 +3,7 @@ package cn.kloping.io;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class ReadUtils {
 
@@ -19,7 +20,7 @@ public class ReadUtils {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int len = -1;
         while ((len = is.read(bytes)) != -1)
-            baos.write(bytes);
+            baos.write(bytes, 0, len);
         return baos.toByteArray();
     }
 
@@ -38,7 +39,42 @@ public class ReadUtils {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int len = -1;
         while ((len = is.read(bytes)) != -1)
-            baos.write(bytes);
+            baos.write(bytes, 0, len);
         return baos.toString(character);
+    }
+
+    private static final byte[] BUFFER = new byte[4096 * 1024];
+
+    /**
+     * 复制流
+     *
+     * @param input
+     * @param output
+     * @throws IOException
+     */
+    public static void copy(InputStream input, OutputStream output) throws IOException {
+        int bytesRead;
+        while ((bytesRead = input.read(BUFFER)) != -1) {
+            output.write(BUFFER, 0, bytesRead);
+        }
+    }
+
+    /**
+     * 复制流
+     *
+     * @param input
+     * @param output
+     * @param autoClose 是否关闭
+     * @throws IOException
+     */
+    public static void copy(InputStream input, OutputStream output, boolean autoClose) throws IOException {
+        int bytesRead;
+        while ((bytesRead = input.read(BUFFER)) != -1) {
+            output.write(BUFFER, 0, bytesRead);
+        }
+        if (autoClose) {
+            input.close();
+            output.close();
+        }
     }
 }
