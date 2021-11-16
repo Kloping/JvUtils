@@ -23,3 +23,4 @@ Use Maven dependency
 - class class 相关
 - io 流相关
 - reg 正则相关
+- arr 数组集合序列化
