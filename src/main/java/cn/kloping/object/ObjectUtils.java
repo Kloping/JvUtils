@@ -135,4 +135,31 @@ public class ObjectUtils {
         }
         return -1;
     }
+
+    /**
+     * 字符串 可能转的类型
+     *
+     * @param m
+     * @return
+     */
+    public static Object maybeType(String m) {
+        if (m.trim().toUpperCase().equals("TRUE") || m.trim().toUpperCase().equals("FALSE"))
+            return Boolean.parseBoolean(m.trim());
+        try {
+            try {
+                int i = Integer.parseInt(m.trim());
+                return i;
+            } catch (NumberFormatException e) {
+                long l = Long.parseLong(m.trim());
+                return l;
+            }
+        } catch (NumberFormatException e) {
+            try {
+                double d = Double.parseDouble(m.trim());
+                return d;
+            } catch (NumberFormatException ex) {
+                return m;
+            }
+        }
+    }
 }

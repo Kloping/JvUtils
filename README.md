@@ -24,3 +24,4 @@ Use Maven dependency
 - io 流相关
 - reg 正则相关
 - arr 数组集合序列化
+- conf 配置
