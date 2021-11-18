@@ -88,14 +88,14 @@ public class ArrSerializer {
                 "";
     }
 
-    private static final Map<Class<?>, Class<?>> memoryMaps = new ConcurrentHashMap<>();
+    private Map<Class<?>, Class<?>> memorySonCls2FatherClsMaps = new ConcurrentHashMap<>();
 
     private String worker1(Object o) {
-        if (memoryMaps.containsKey(o.getClass()))
-            return maps.get(memoryMaps.get(o.getClass())).serializer(o);
+        if (memorySonCls2FatherClsMaps.containsKey(o.getClass()))
+            return maps.get(memorySonCls2FatherClsMaps.get(o.getClass())).serializer(o);
         for (Class<?> cla : maps.keySet()) {
             if (ObjectUtils.isSuperOrInterface(o.getClass(), cla)) {
-                memoryMaps.put(o.getClass(), cla);
+                memorySonCls2FatherClsMaps.put(o.getClass(), cla);
                 return maps.get(cla).serializer(o);
             }
         }
