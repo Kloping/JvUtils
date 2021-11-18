@@ -142,12 +142,12 @@ public class Class2OMap<T extends Object> {
     }
 
     private <T> T get1(Class<T> cla) {
-        AtomicReference<T> t = null;
+        AtomicReference<T> t = new AtomicReference<>();
         if (memorySonCls2FatherClsMaps.containsKey(cla)) return (T) map.get(memorySonCls2FatherClsMaps.get(cla)).get(0);
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(cla, k.getClass())) {
+            if (ObjectUtils.isSuperOrInterface(k,cla)) {
                 t.set((T) v.get(0));
-                if (memory) memorySonCls2FatherClsMaps.put(cla, k.getClass());
+                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
                 return;
             }
         });
@@ -159,9 +159,9 @@ public class Class2OMap<T extends Object> {
         AtomicInteger size = new AtomicInteger(-1);
         if (memorySonCls2FatherClsMaps.containsKey(cla)) return map.get(memorySonCls2FatherClsMaps.get(cla)).size();
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(cla, k.getClass())) {
+            if (ObjectUtils.isSuperOrInterface(k,cla)) {
                 size.set(v.size());
-                if (memory) memorySonCls2FatherClsMaps.put(cla, k.getClass());
+                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
                 return;
             }
         });
@@ -169,12 +169,12 @@ public class Class2OMap<T extends Object> {
     }
 
     private List getList1(Class<?> cla) {
-        AtomicReference<List> list = null;
+        AtomicReference<List> list = new AtomicReference<>();
         if (memorySonCls2FatherClsMaps.containsKey(cla)) return map.get(memorySonCls2FatherClsMaps.get(cla));
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(cla, k.getClass())) {
+            if (ObjectUtils.isSuperOrInterface(k,cla)) {
                 list.set(v);
-                if (memory) memorySonCls2FatherClsMaps.put(cla, k.getClass());
+                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
                 return;
             }
         });
@@ -182,16 +182,16 @@ public class Class2OMap<T extends Object> {
     }
 
     private <T> T get1(Class<T> cla, int index) {
-        AtomicReference<T> t = null;
+        AtomicReference<T> t = new AtomicReference<>();
         if (memorySonCls2FatherClsMaps.containsKey(cla)) {
             List v = map.get(memorySonCls2FatherClsMaps.get(cla));
             if (v.size() > index) t.set((T) v.get(0));
-            return (T) map.get(memorySonCls2FatherClsMaps.get(cla)).get(0);
+            return (T) map.get(memorySonCls2FatherClsMaps.get(cla)).get(index);
         }
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(cla, k.getClass())) {
-                if (memory) memorySonCls2FatherClsMaps.put(cla, k.getClass());
-                if (v.size() > index) t.set((T) v.get(0));
+            if (ObjectUtils.isSuperOrInterface(k,cla)) {
+                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
+                if (v.size() > index) t.set((T) v.get(index));
                 else return;
             }
         });
