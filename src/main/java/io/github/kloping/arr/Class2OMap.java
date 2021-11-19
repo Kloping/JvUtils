@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class Class2OMap<T extends Object> {
+public class Class2OMap {
     private Map<Class<?>, List<Object>> map = new LinkedHashMap<>();
     private Map<Class<?>, Class<?>> memorySonCls2FatherClsMaps = new ConcurrentHashMap<>();
 
@@ -19,13 +19,13 @@ public class Class2OMap<T extends Object> {
      * @param <T>
      * @return
      */
-    public static <T> Class2OMap<T> create(T... objects) {
-        return new Class2OMap<T>(objects);
+    public static <T> Class2OMap create(T... objects) {
+        return new Class2OMap(objects);
     }
 
-    private Class2OMap(T... objects) {
-        List<T> list = new LinkedList<>();
-        for (T o : objects) {
+    private <M> Class2OMap(M... objects) {
+        List<M> list = new LinkedList<>();
+        for (M o : objects) {
             if (o == null) continue;
             if (o instanceof Collection) {
                 Collection collection = (Collection) o;
@@ -78,7 +78,7 @@ public class Class2OMap<T extends Object> {
      * @return
      */
     public <T> T get(Class<T> cla) {
-        return identical ? get0(cla) : get1(cla);
+        return (T) (identical ? get0(cla) : get1(cla));
     }
 
     /**
@@ -99,7 +99,7 @@ public class Class2OMap<T extends Object> {
      * @param cla
      * @return
      */
-    public Integer getSize(Class<T> cla) {
+    public Integer getSize(Class<?> cla) {
         return identical ? getSize0(cla) : getSize1(cla);
     }
 
@@ -145,9 +145,9 @@ public class Class2OMap<T extends Object> {
         AtomicReference<T> t = new AtomicReference<>();
         if (memorySonCls2FatherClsMaps.containsKey(cla)) return (T) map.get(memorySonCls2FatherClsMaps.get(cla)).get(0);
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(k,cla)) {
+            if (ObjectUtils.isSuperOrInterface(k, cla)) {
                 t.set((T) v.get(0));
-                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
+                if (memory) memorySonCls2FatherClsMaps.put(k, cla);
                 return;
             }
         });
@@ -159,9 +159,9 @@ public class Class2OMap<T extends Object> {
         AtomicInteger size = new AtomicInteger(-1);
         if (memorySonCls2FatherClsMaps.containsKey(cla)) return map.get(memorySonCls2FatherClsMaps.get(cla)).size();
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(k,cla)) {
+            if (ObjectUtils.isSuperOrInterface(k, cla)) {
                 size.set(v.size());
-                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
+                if (memory) memorySonCls2FatherClsMaps.put(k, cla);
                 return;
             }
         });
@@ -172,9 +172,9 @@ public class Class2OMap<T extends Object> {
         AtomicReference<List> list = new AtomicReference<>();
         if (memorySonCls2FatherClsMaps.containsKey(cla)) return map.get(memorySonCls2FatherClsMaps.get(cla));
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(k,cla)) {
+            if (ObjectUtils.isSuperOrInterface(k, cla)) {
                 list.set(v);
-                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
+                if (memory) memorySonCls2FatherClsMaps.put(k, cla);
                 return;
             }
         });
@@ -189,8 +189,8 @@ public class Class2OMap<T extends Object> {
             return (T) map.get(memorySonCls2FatherClsMaps.get(cla)).get(index);
         }
         map.forEach((k, v) -> {
-            if (ObjectUtils.isSuperOrInterface(k,cla)) {
-                if (memory) memorySonCls2FatherClsMaps.put(k,cla);
+            if (ObjectUtils.isSuperOrInterface(k, cla)) {
+                if (memory) memorySonCls2FatherClsMaps.put(k, cla);
                 if (v.size() > index) t.set((T) v.get(index));
                 else return;
             }
@@ -198,6 +198,4 @@ public class Class2OMap<T extends Object> {
         if (t == null) return null;
         else return t.get();
     }
-
-
 }
