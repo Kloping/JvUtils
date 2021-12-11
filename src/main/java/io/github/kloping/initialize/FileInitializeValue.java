@@ -26,6 +26,7 @@ public class FileInitializeValue {
      */
     public static <T extends Object> T getValue(String path, T defaultV) {
         try {
+            testFile(path);
             Class<?> cla = baseToPack(defaultV.getClass());
             String str = getStringFromFile(path, "//");
             if (!isNotEmpty(str)) return defaultV;
@@ -47,6 +48,7 @@ public class FileInitializeValue {
      */
     public static <T extends Object> T getValue(String path, T defaultV, boolean rePut) {
         try {
+            testFile(path);
             Class<?> cla = baseToPack(defaultV.getClass());
             String str = getStringFromFile(path, "//");
             if (!isNotEmpty(str)) {
@@ -71,6 +73,7 @@ public class FileInitializeValue {
      */
     public static <T extends Object> T getValue(String path, T defaultV, String tips) {
         try {
+            testFile(path);
             Class<?> cla = baseToPack(defaultV.getClass());
             String str = getStringFromFile(path, "//");
             if (!isNotEmpty(str)) {
