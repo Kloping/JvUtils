@@ -3,16 +3,14 @@ package io.github.kloping.io;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class ReadIOUtils {
     /**
      * setMode 0 当 写到 byte 13 10 作为 一行 win
      * setMode 1 当 写到 byte 10 作为 一行 liunx
      */
-    public static class ReadOutputStream {
+    public static class ReadOutputStreamImpl implements ReadOutputStream {
         private ByteArrayOutputStream baos = new ByteArrayOutputStream();
         public OutputStream os;
         private int mode = 0;
@@ -21,17 +19,16 @@ public class ReadIOUtils {
             return os;
         }
 
-        public List<String> getQue() {
-            return que;
+        public Object[] getQue() {
+            return que.toArray();
         }
 
-        private final List<String> que;
+        private ArrayBlockingQueue<String> que = new ArrayBlockingQueue<>(10);
 
-        private ReadOutputStream() {
-            que = Collections.synchronizedList(new LinkedList<>());
+        private ReadOutputStreamImpl() {
         }
 
-        private void setOs(OutputStream os) {
+        public void setOs(OutputStream os) {
             this.os = os;
         }
 
@@ -48,13 +45,10 @@ public class ReadIOUtils {
             if (mode == 0) {
                 if (i1 == 10 && i2 == 13) {
                     try {
-                        String line = baos.toString("utf-8").trim();
+                        String line = baos.toString("utf-8");
                         line = line.substring(0, line.length() - 2);
                         baos.reset();
-                        synchronized (que) {
-                            que.add(line);
-                            que.notifyAll();
-                        }
+                        que.put(line);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -65,10 +59,7 @@ public class ReadIOUtils {
                         String line = baos.toString("utf-8");
                         line = line.substring(0, line.length() - 1);
                         baos.reset();
-                        synchronized (que) {
-                            que.add(line);
-                            que.notifyAll();
-                        }
+                        que.put(line);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -80,23 +71,16 @@ public class ReadIOUtils {
         private int index = 0;
 
         public String readLine() {
-            if (que.size() == index++)
-                synchronized (que) {
-                    try {
-                        que.wait();
-                        return que.get(que.size() - 1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            return que.get(que.size() - 1);
+            try {
+                return que.take();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         public void clearCache() {
-            synchronized (que) {
-                que.clear();
-                index = 0;
-            }
+            que.clear();
         }
     }
 
@@ -108,8 +92,8 @@ public class ReadIOUtils {
      * @param os 输出流
      * @return 实例
      */
-    public static ReadOutputStream connectOs(OutputStream os) {
-        ReadOutputStream readOutputStream = new ReadOutputStream();
+    public static ReadOutputStreamImpl connectOs(OutputStream os) {
+        ReadOutputStreamImpl readOutputStream = new ReadOutputStreamImpl();
         readOutputStream.setOs(new OutputStream() {
             @Override
             public void write(int b) throws IOException {

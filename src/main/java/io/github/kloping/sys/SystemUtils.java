@@ -16,7 +16,7 @@ public class SystemUtils {
     public static void setOutToFile(String path, boolean append) throws IOException {
         File file;
         FileUtils.testFile(file = new File(path));
-        ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.out);
+        ReadIOUtils.ReadOutputStreamImpl ros = ReadIOUtils.connectOs(System.out);
         System.setOut(new PrintStream(ros.getOs()));
         new Thread(() -> {
             try {
@@ -35,7 +35,7 @@ public class SystemUtils {
     public static void setErrToFile(String path, boolean append) throws IOException {
         File file;
         FileUtils.testFile(file = new File(path));
-        ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.err);
+        ReadIOUtils.ReadOutputStreamImpl ros = ReadIOUtils.connectOs(System.err);
         System.setErr(new PrintStream(ros.getOs()));
         new Thread(() -> {
             try {

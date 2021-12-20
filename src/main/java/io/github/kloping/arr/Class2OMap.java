@@ -44,7 +44,8 @@ public class Class2OMap {
     }
 
     /**
-     * 设置 class 类型 必须 是否 相等 (不包含子类)
+     * 设置 class 类型 是否 必须 相等 (不包含子类)
+     * 默认 true
      *
      * @param identical
      */

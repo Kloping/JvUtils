@@ -33,14 +33,9 @@ public class ReadUtils {
      * @throws IOException
      */
     public static String readAll(InputStream is, String character) throws IOException {
-        if (is == null) return null;
         if (character == null) character = "utf-8";
-        byte[] bytes = new byte[1024];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int len = -1;
-        while ((len = is.read(bytes)) != -1)
-            baos.write(bytes, 0, len);
-        return baos.toString(character);
+        byte[] bytes = readAll(is);
+        return new String(bytes, character);
     }
 
     private static final byte[] BUFFER = new byte[4096 * 1024];
@@ -53,10 +48,7 @@ public class ReadUtils {
      * @throws IOException
      */
     public static void copy(InputStream input, OutputStream output) throws IOException {
-        int bytesRead;
-        while ((bytesRead = input.read(BUFFER)) != -1) {
-            output.write(BUFFER, 0, bytesRead);
-        }
+        copy(input, output, false);
     }
 
     /**
