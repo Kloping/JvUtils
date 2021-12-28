@@ -20,7 +20,7 @@ Use Maven dependency
 - url 网络相关
 - video 视频相关
 - other 其他
-- class class 相关
+- claz class 相关
 - io 流相关
 - reg 正则相关
 - arr 数组集合序列化

@@ -175,4 +175,34 @@ public class ClassUtils {
         }
         return null;
     }
+
+    /**
+     * copy A obj all the fields to new obj
+     * and two obj hashcode not same
+     *
+     * @param t will copy object
+     * @param <T>  Automatically inferring
+     * @return
+     * @throws IllegalAccessException
+     */
+    public static <T> T copyAllField(T t) throws IllegalAccessException {
+        Field[] fields = t.getClass().getDeclaredFields();
+        Object[] objects = new Object[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i].setAccessible(true);
+            objects[i] = fields[i].get(t);
+        }
+        T t0 = null;
+        Object o = newInstance(t.getClass());
+        if (o == null) {
+            t0 = (T) newInstance(t.getClass(), objects);
+        } else {
+            t0 = (T) o;
+            for (int i = 0; i < fields.length; i++) {
+                fields[i].setAccessible(true);
+                fields[i].set(t0, objects[i]);
+            }
+        }
+        return t0;
+    }
 }
