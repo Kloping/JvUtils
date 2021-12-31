@@ -435,6 +435,22 @@ public class HMLObject {
             return map;
         }
     }
+
+    public Map<String, Object> getEntry() {
+        return entry;
+    }
+
+    public void setEntry(Map<String, Object> entry) {
+        this.entry = entry;
+    }
+
+    public static Map<Class<?>, GetFields> getCustomField() {
+        return customField;
+    }
+
+    public static Map<Class<?>, Field[]> getCache() {
+        return cache;
+    }
 }
 
 
