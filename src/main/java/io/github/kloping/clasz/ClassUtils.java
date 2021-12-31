@@ -3,10 +3,7 @@ package io.github.kloping.clasz;
 import io.github.kloping.map.MapUtils;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -180,8 +177,8 @@ public class ClassUtils {
      * copy A obj all the fields to new obj
      * and two obj hashcode not same
      *
-     * @param t will copy object
-     * @param <T>  Automatically inferring
+     * @param t   will copy object
+     * @param <T> Automatically inferring
      * @return
      * @throws IllegalAccessException
      */
@@ -204,5 +201,33 @@ public class ClassUtils {
             }
         }
         return t0;
+    }
+
+    /**
+     * Determines whether the field is static
+     *
+     * @param field
+     * @return
+     */
+    public static boolean isStatic(Field field) {
+        return field == null ? false : Modifier.isStatic(field.getModifiers());
+    }
+
+    /**
+     * Determines whether the {@link Executable} is static
+     *
+     * @param executable
+     * @return
+     */
+    public static boolean isStatic(Executable executable) {
+        return executable == null ? false : Modifier.isStatic(executable.getModifiers());
+    }
+
+    public static <T> T asT(Class<T> cla, Object t) {
+        return (T) t;
+    }
+
+    public static <T> T asT(String claName, Object t) throws ClassNotFoundException {
+        return (T) asT(Class.forName(claName), t);
     }
 }

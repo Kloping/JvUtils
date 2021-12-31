@@ -3,8 +3,7 @@ package io.github.kloping.url;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static io.github.kloping.judge.Judge.isEmpty;
 
@@ -82,7 +81,14 @@ public class UrlUtils {
         }
     }
 
-    public static final ExecutorService threads = Executors.newFixedThreadPool(20);
+    public static final ExecutorService THREADS = new ThreadPoolExecutor(15, 15, 1000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(15), new ThreadFactory() {
+        private int i = 0;
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread("t" + i++);
+        }
+    });
 
     /**
      * 下载文件
@@ -91,7 +97,7 @@ public class UrlUtils {
      * @param fileName 文件名
      */
     public static void downloadFile(String urlStr, String fileName) {
-        threads.execute(() -> {
+        THREADS.execute(() -> {
             try {
                 if (isEmpty(urlStr) || isEmpty(fileName)) return;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -115,7 +121,7 @@ public class UrlUtils {
      * @param file   文件
      */
     public static void downloadFile(String urlStr, File file) {
-        threads.execute(() -> {
+        THREADS.execute(() -> {
             try {
                 if (file == null || isEmpty(urlStr)) return;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();

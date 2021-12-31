@@ -2,6 +2,11 @@ package io.github.kloping.object;
 
 import io.github.kloping.judge.Judge;
 
+import java.util.HashSet;
+
+/**
+ * @author github-kloping
+ */
 public class ObjectUtils {
 
     /**
@@ -65,6 +70,26 @@ public class ObjectUtils {
         return cla;
     }
 
+    private static final HashSet<Class> HASH_SET = new HashSet();
+
+    static {
+        HASH_SET.add(byte.class);
+        HASH_SET.add(char.class);
+        HASH_SET.add(short.class);
+        HASH_SET.add(int.class);
+        HASH_SET.add(long.class);
+        HASH_SET.add(boolean.class);
+        HASH_SET.add(float.class);
+        HASH_SET.add(double.class);
+        for (Class aClass : HASH_SET.toArray(new Class[0])) {
+            HASH_SET.add(baseToPack(aClass));
+        }
+    }
+
+    public static boolean isBaseOrPack(Class<?> cla) {
+        return HASH_SET.contains(cla);
+    }
+
     /**
      * 基本类型class转包装class
      *
@@ -120,6 +145,7 @@ public class ObjectUtils {
 
     /**
      * 继承 或 实现
+     *
      * @param son
      * @param father
      * @return
@@ -146,6 +172,9 @@ public class ObjectUtils {
         return -1;
     }
 
+    private static final String TURE = "TRUE";
+    private static final String FALSE = "FALSE";
+
     /**
      * 字符串 可能转的类型
      *
@@ -153,22 +182,28 @@ public class ObjectUtils {
      * @return
      */
     public static Object maybeType(String m) {
-        if (m.trim().toUpperCase().equals("TRUE") || m.trim().toUpperCase().equals("FALSE"))
+        if (TURE.equals(m.trim().toUpperCase()) || FALSE.equals(m.trim().toUpperCase())) {
             return Boolean.parseBoolean(m.trim());
+        }
         try {
-            try {
-                int i = Integer.parseInt(m.trim());
-                return i;
-            } catch (NumberFormatException e) {
-                long l = Long.parseLong(m.trim());
-                return l;
-            }
+            int i = Integer.parseInt(m.trim());
+            return i;
         } catch (NumberFormatException e) {
             try {
-                double d = Double.parseDouble(m.trim());
-                return d;
+                long l = Long.parseLong(m.trim());
+                return l;
             } catch (NumberFormatException ex) {
-                return m;
+                try {
+                    float f = Float.parseFloat(m.trim());
+                    return f;
+                } catch (NumberFormatException exc) {
+                    try {
+                        double d = Double.parseDouble(m.trim());
+                        return d;
+                    } catch (NumberFormatException exx) {
+                        return m;
+                    }
+                }
             }
         }
     }

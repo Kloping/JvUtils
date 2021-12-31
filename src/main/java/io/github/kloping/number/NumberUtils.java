@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author github-kloping
+ */
 public class NumberUtils {
     /**
      * 从字符串中发现阿拉伯数字
