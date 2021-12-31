@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * @author github-kloping
  * @version 1.0
- * @date 2021/12/31-15
  */
 public class Iterator0<T> {
     private T[] ts;

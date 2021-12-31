@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author github-kloping
  * @version 1.0
- * @date 2021/12/31-10
  */
 public class HMLObject {
     private Map<String, Object> entry = new ConcurrentHashMap<>();
