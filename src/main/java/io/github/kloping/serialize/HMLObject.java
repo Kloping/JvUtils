@@ -8,11 +8,8 @@ import java.io.File;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,18 +51,31 @@ public class HMLObject {
     }
 
     public static String toHMLString(Object o) {
-        try {
-            if (o == null) {
-                return null;
+        int t = 0;
+        if (o == null) {
+            return NULL;
+        }
+        Class cla = ObjectUtils.baseToPack(o.getClass());
+        if (o instanceof Map) {
+            return toV3(o, t);
+        } else if (o instanceof Collection) {
+            return toV4(o, t);
+        } else if (o.getClass().isArray()) {
+            return toV2(o, t);
+        } else if (Number.class.isAssignableFrom(cla)) {
+            return PRE+cla.getName()+"\nvalue: " + o.toString();
+        } else if (Boolean.class == cla) {
+            return PRE+cla.getName()+"\nvalue: " + o.toString();
+        } else {
+            if (cla == String.class) {
+                return PRE+cla.getName()+"\nvalue: " + "\"" + o.toString() + "\"";
+            } else {
+                return work(o, t + 1);
             }
-            return work(o, 0);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
         }
     }
 
-    private static String work(Object o, int t) throws InterruptedException {
+    private static String work(Object o, int t) {
         Field[] fields = getFields(o.getClass());
         StringWriter sw = new StringWriter();
         sw.write(PRE);
@@ -87,14 +97,14 @@ public class HMLObject {
         return sw.toString().trim();
     }
 
-    private static String work2(Object[] os, int t) throws InterruptedException {
+    private static String work2(Object[] os, int t) {
         StringWriter sw = new StringWriter();
         sw.write(PRE);
         sw.write(os.getClass().getName());
         return work2(os, t, sw);
     }
 
-    private static String work2(Object[] os, int t, String name) throws InterruptedException {
+    private static String work2(Object[] os, int t, String name) {
         StringWriter sw = new StringWriter();
         sw.write(PRE);
         sw.write(name);
@@ -119,13 +129,15 @@ public class HMLObject {
         return sw.toString().trim();
     }
 
-    private static String toV(Object o, int t) throws InterruptedException {
+    private static String toV(Object o, int t) {
         if (o == null) {
             return NULL;
         }
         Class cla = ObjectUtils.baseToPack(o.getClass());
         if (o instanceof Map) {
             return toV3(o, t);
+        } else if (o instanceof Collection) {
+            return toV4(o, t);
         } else if (o.getClass().isArray()) {
             return toV2(o, t);
         } else if (Number.class.isAssignableFrom(cla)) {
@@ -141,26 +153,38 @@ public class HMLObject {
         }
     }
 
-    private static String toV3(Object o, int t) throws InterruptedException {
-        Map map = (Map) o;
-        return work2(Entry0.asEntry0(map), t + 1, o.getClass().getName());
-    }
-
-    private static String toV2(Object o, int t) throws InterruptedException {
+    private static String toV2(Object o, int t) {
         Object[] os = (Object[]) o;
         return work2(os, t + 1);
     }
 
+    private static String toV3(Object o, int t) {
+        Map map = (Map) o;
+        return work2(Entry0.asEntry0(map), t + 1, o.getClass().getName());
+    }
+
+    private static String toV4(Object o, int t) {
+        Collection collection = (Collection) o;
+        Object[] os = ((Collection<?>) o).toArray();
+        return work2(os, t + 1, o.getClass().getName());
+    }
+
+
     public static HMLObject parseObject(String hmlStr) {
         Iterator0<String> iterator = Iterator0.asIterator(Arrays.asList(hmlStr.split("\n")));
-        return parseObject(iterator);
+        return parseObject(iterator, 1);
+    }
+
+    public static HMLObject parseObject(String hmlStr, int t) {
+        Iterator0<String> iterator = Iterator0.asIterator(Arrays.asList(hmlStr.split("\n")));
+        return parseObject(iterator, t);
     }
 
     public static <T> T parseObject(String hmlStr, Class<T> cla) {
         return parseObject(hmlStr).toJavaObject(cla);
     }
 
-    public static HMLObject parseObject(Iterator0<String> iterator) {
+    public static HMLObject parseObject(Iterator0<String> iterator, int t) {
         HMLObject object = new HMLObject();
         while (iterator.hasNext()) {
             String line = iterator.next();
@@ -171,7 +195,7 @@ public class HMLObject {
                 String type = line.trim().substring(PRE.length());
                 object.entry.put(TYPE_FLAG, type);
             } else {
-                String k = line.substring(0, line.indexOf(":"));
+                String k = line.substring(0, line.indexOf(":")).trim();
                 String v = line.substring(line.indexOf(":") + 1);
                 Object vo = toK(v, iterator, 1);
                 object.entry.put(k, vo);
@@ -203,7 +227,7 @@ public class HMLObject {
                 sw.write("\n");
                 while (iterator.hasNext()) {
                     String line = iterator.next();
-                    if (line.startsWith(pre)) {
+                    if (PreMore(pre, line)) {
                         sw.write(line.replaceFirst(pre, ""));
                         sw.write("\n");
                     } else {
@@ -211,9 +235,53 @@ public class HMLObject {
                         break;
                     }
                 }
-                return parseObject(sw.toString());
+                return parseObject(sw.toString(), i + 1);
             }
         }
+    }
+
+    private static boolean PreMore(String pre, String line) {
+        line = line.replaceFirst(pre,"");
+        return line.startsWith(pre);
+    }
+
+    private static final Class ENTRY0ARRAY_CLASS = Entry0[].class;
+
+    public static Map<Class<?>, Field[]> cache = new ConcurrentHashMap<>();
+
+    private static Field[] getFields(Class<?> cla) {
+        if (cache.containsKey(cla)) {
+            return cache.get(cla);
+        }
+        try {
+            if (customField.containsKey(cla)) {
+                GetFields getFieldsable = customField.get(cla);
+                Field[] fields = getFieldsable.getFields(cla);
+                cache.put(cla, fields);
+                return fields;
+            }
+        } catch (Exception e) {
+            System.err.println("warring get field " + e);
+        }
+        Field[] declaredFields = cla.getDeclaredFields();
+        Set<Field> fields1 = new HashSet<>();
+        for (Field field : declaredFields) {
+            if (ClassUtils.isStatic(field)) {
+                continue;
+            }
+            fields1.add(field);
+        }
+        Field[] fields = fields1.toArray(new Field[0]);
+        cache.put(cla, fields);
+        return fields;
+    }
+
+    //=============
+    @Override
+    public String toString() {
+        return "HMLObject{" +
+                "entry=" + entry +
+                '}';
     }
 
     public Object toJavaObject() throws ClassNotFoundException {
@@ -221,6 +289,8 @@ public class HMLObject {
         Class cla = Class.forName(className);
         if (Map.class.isAssignableFrom(cla)) {
             return toJavaObject3(cla);
+        } else if (Collection.class.isAssignableFrom(cla)) {
+            return toJavaObject5(cla);
         } else if (cla.isArray()) {
             return toJavaObject2(cla);
         } else {
@@ -228,7 +298,29 @@ public class HMLObject {
         }
     }
 
-    private static final Class ENTRY0ARRAY_CLASS = Entry0[].class;
+    private Object toJavaObject5(Class cla) throws ClassNotFoundException {
+        Collection col = (Collection) ClassUtils.newInstance(cla);
+        Object[] objects = (Object[]) Array.newInstance(Object.class, getRealSize());
+        for (String k : entry.keySet()) {
+            if (TYPE_FLAG.equals(k)) {
+                continue;
+            }
+            try {
+                int i = Integer.parseInt(k);
+                Object v = entry.get(k);
+                if (v instanceof HMLObject) {
+                    HMLObject o1 = (HMLObject) v;
+                    objects[i] = o1.toJavaObject();
+                } else {
+                    objects[i] = v;
+                }
+            } catch (Exception e) {
+                System.err.println("warring for " + e);
+            }
+        }
+        col.addAll(Arrays.asList(objects));
+        return col;
+    }
 
     private Object toJavaObject3(Class cla) throws ClassNotFoundException {
         Map map = (Map) ClassUtils.newInstance(cla);
@@ -291,6 +383,7 @@ public class HMLObject {
         Class c0 = cla.getComponentType();
         T[] objects = (T[]) Array.newInstance(c0, getRealSize());
         for (String k : entry.keySet()) {
+            k = k.trim();
             if (TYPE_FLAG.equals(k)) {
                 continue;
             }
@@ -356,35 +449,6 @@ public class HMLObject {
         return t;
     }
 
-    public static Map<Class<?>, Field[]> cache = new ConcurrentHashMap<>();
-
-    private static Field[] getFields(Class<?> cla) {
-        if (cache.containsKey(cla)) {
-            return cache.get(cla);
-        }
-        try {
-            if (customField.containsKey(cla)) {
-                GetFields getFieldsable = customField.get(cla);
-                Field[] fields = getFieldsable.getFields(cla);
-                cache.put(cla, fields);
-                return fields;
-            }
-        } catch (Exception e) {
-            System.err.println("warring get field " + e);
-        }
-        Field[] declaredFields = cla.getDeclaredFields();
-        Set<Field> fields1 = new HashSet<>();
-        for (Field field : declaredFields) {
-            if (ClassUtils.isStatic(field)) {
-                continue;
-            }
-            fields1.add(field);
-        }
-        Field[] fields = fields1.toArray(new Field[0]);
-        cache.put(cla, fields);
-        return fields;
-    }
-
     private synchronized int getRealSize() {
         int i = 0;
         for (String s : entry.keySet()) {
@@ -396,14 +460,16 @@ public class HMLObject {
         return i;
     }
 
-    @Override
-    public String toString() {
-        return "HMLObject{" +
-                "entry=" + entry +
-                '}';
+    public Map<String, Object> getEntry() {
+        return entry;
+    }
+
+    public void setEntry(Map<String, Object> entry) {
+        this.entry = entry;
     }
 
     private static class Entry0<K, V> {
+
         private K k;
         private V v;
         private String kName;
@@ -434,14 +500,6 @@ public class HMLObject {
             }
             return map;
         }
-    }
-
-    public Map<String, Object> getEntry() {
-        return entry;
-    }
-
-    public void setEntry(Map<String, Object> entry) {
-        this.entry = entry;
     }
 
     public static Map<Class<?>, GetFields> getCustomField() {
