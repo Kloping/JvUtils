@@ -21,6 +21,7 @@ public class HMLObject {
     private static final String NULL = "null";
     private static final String PRE = "->";
     private static final String TYPE_FLAG = "--type";
+    private static final String IGNORE_PRE = "//";
     public static Map<Class<?>, GetFields> customField = new ConcurrentHashMap<>();
 
     public static interface GetFields<T> {
@@ -187,6 +188,9 @@ public class HMLObject {
         HMLObject object = new HMLObject();
         while (iterator.hasNext()) {
             String line = iterator.next();
+            if (line.trim().startsWith(IGNORE_PRE)) {
+                continue;
+            }
             if (line.trim().isEmpty()) {
                 continue;
             }
@@ -226,6 +230,9 @@ public class HMLObject {
                 sw.write("\n");
                 while (iterator.hasNext()) {
                     String line = iterator.next();
+                    if (line.trim().startsWith(IGNORE_PRE)) {
+                        continue;
+                    }
                     if (PreMore(pre, line)) {
                         sw.write(line.replaceFirst(pre, ""));
                         sw.write("\n");
