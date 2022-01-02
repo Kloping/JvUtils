@@ -7,9 +7,7 @@ import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author qq-3474006766
@@ -164,6 +162,9 @@ public class ClassUtils {
             try {
                 if (constructor.getParameterCount() == objects.length) {
                     constructor.setAccessible(true);
+                    if (needSort(constructor.getParameterTypes(), objects)) {
+                        objects = sort(objects, constructor.getParameterTypes());
+                    }
                     return (T) constructor.newInstance(objects);
                 }
             } catch (Exception e) {
@@ -171,6 +172,33 @@ public class ClassUtils {
             }
         }
         return null;
+    }
+
+    private static boolean needSort(Class<?>[] parameterTypes, Object[] objects) {
+        boolean k = false;
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (!parameterTypes[i].isAssignableFrom(objects[i].getClass())) {
+                k = true;
+                break;
+            }
+        }
+        return k;
+    }
+
+    private static Object[] sort(Object[] objects, Class<?>[] parameterTypes) {
+        Object[] os = new Object[objects.length];
+        List<Object> oss = new ArrayList<>();
+        for (Object object : objects) {
+            for (int i = 0; i < parameterTypes.length; i++) {
+                if (parameterTypes[i].isAssignableFrom(object.getClass())) {
+                    if (os[i] == null && !oss.contains(object)) {
+                        os[i] = object;
+                        oss.add(object);
+                    }
+                }
+            }
+        }
+        return os;
     }
 
     /**

@@ -63,12 +63,12 @@ public class HMLObject {
         } else if (o.getClass().isArray()) {
             return toV2(o, t);
         } else if (Number.class.isAssignableFrom(cla)) {
-            return PRE+cla.getName()+"\nvalue: " + o.toString();
+            return PRE + cla.getName() + "\nvalue: " + o.toString();
         } else if (Boolean.class == cla) {
-            return PRE+cla.getName()+"\nvalue: " + o.toString();
+            return PRE + cla.getName() + "\nvalue: " + o.toString();
         } else {
             if (cla == String.class) {
-                return PRE+cla.getName()+"\nvalue: " + "\"" + o.toString() + "\"";
+                return PRE + cla.getName() + "\nvalue: " + "\"" + o.toString() + "\"";
             } else {
                 return work(o, t + 1);
             }
@@ -169,7 +169,6 @@ public class HMLObject {
         return work2(os, t + 1, o.getClass().getName());
     }
 
-
     public static HMLObject parseObject(String hmlStr) {
         Iterator0<String> iterator = Iterator0.asIterator(Arrays.asList(hmlStr.split("\n")));
         return parseObject(iterator, 1);
@@ -241,7 +240,7 @@ public class HMLObject {
     }
 
     private static boolean PreMore(String pre, String line) {
-        line = line.replaceFirst(pre,"");
+        line = line.replaceFirst(pre, "");
         return line.startsWith(pre);
     }
 
@@ -276,7 +275,6 @@ public class HMLObject {
         return fields;
     }
 
-    //=============
     @Override
     public String toString() {
         return "HMLObject{" +

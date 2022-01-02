@@ -81,6 +81,7 @@ public class ObjectUtils {
         HASH_SET.add(boolean.class);
         HASH_SET.add(float.class);
         HASH_SET.add(double.class);
+        HASH_SET.add(Number.class);
         for (Class aClass : HASH_SET.toArray(new Class[0])) {
             HASH_SET.add(baseToPack(aClass));
         }
