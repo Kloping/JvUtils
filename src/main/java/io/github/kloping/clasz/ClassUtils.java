@@ -72,8 +72,9 @@ public class ClassUtils {
 
     public static Method[] getAllMethod(Class<?> cla) {
         Method[] methods = cla.getDeclaredMethods();
-        for (Method method : methods)
+        for (Method method : methods) {
             method.setAccessible(true);
+        }
         return methods;
     }
 

@@ -146,13 +146,25 @@ public class ObjectUtils {
 
     /**
      * 继承 或 实现
+     * old
+     *
+     * @param son
+     * @param father
+     * @return
+     */
+    public static boolean isSuperOrInterfaceOld(Class<?> son, Class<?> father) {
+        return isSuper(son, father) || isInterface(son, father);
+    }
+
+    /**
+     * 继承 或 实现
      *
      * @param son
      * @param father
      * @return
      */
     public static boolean isSuperOrInterface(Class<?> son, Class<?> father) {
-        return isSuper(son, father) || isInterface(son, father);
+        return father.isAssignableFrom(son);
     }
 
     /**
