@@ -5,7 +5,7 @@ Use Maven dependency
     <dependency>
         <groupId>io.github.Kloping</groupId>
         <artifactId>JvUtils</artifactId>
-        <version>0.2.9</version>
+        <version>0.3.6</version>
     </dependency>
 
 - date 日期相关
@@ -25,3 +25,4 @@ Use Maven dependency
 - reg 正则相关
 - arr 数组集合序列化
 - conf 配置
+- serialize (反)序列化
