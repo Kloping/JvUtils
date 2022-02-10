@@ -180,8 +180,8 @@ public class HMLObject {
         return parseObject(iterator, t);
     }
 
-    public static <T> T parseObject(String hmlStr, Class<T> cla) {
-        return parseObject(hmlStr).toJavaObject(cla);
+    public static <T> T parseObject(String hmlStr, Class<T> cla) throws ClassNotFoundException {
+        return (T) parseObject(hmlStr).toJavaObject();
     }
 
     public static HMLObject parseObject(Iterator0<String> iterator, int t) {
@@ -233,7 +233,7 @@ public class HMLObject {
                     if (line.trim().startsWith(IGNORE_PRE)) {
                         continue;
                     }
-                    if (PreMore(pre, line)) {
+                    if (preMore(pre, line)) {
                         sw.write(line.replaceFirst(pre, ""));
                         sw.write("\n");
                     } else {
@@ -246,7 +246,7 @@ public class HMLObject {
         }
     }
 
-    private static boolean PreMore(String pre, String line) {
+    private static boolean preMore(String pre, String line) {
         line = line.replaceFirst(pre, "");
         return line.startsWith(pre);
     }

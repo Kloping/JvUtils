@@ -4,12 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * @author github-kloping
+ */
 public class DateUtils {
-    private static final SimpleDateFormat sf_dd = new SimpleDateFormat("dd");
-    private static final SimpleDateFormat sf_MM = new SimpleDateFormat("MM");
-    private static final SimpleDateFormat sf_YY = new SimpleDateFormat("yyyy");
-    private static final SimpleDateFormat sf_0 = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
-
+    private static final SimpleDateFormat SF_DD = new SimpleDateFormat("dd");
+    private static final SimpleDateFormat SF_MM = new SimpleDateFormat("MM");
+    private static final SimpleDateFormat SF_YY = new SimpleDateFormat("yyyy");
+    private static final SimpleDateFormat SF_0 = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
 
     /**
      * 返回日
@@ -17,7 +19,7 @@ public class DateUtils {
      * @return int
      */
     public static int getDay() {
-        return Integer.parseInt(sf_dd.format(new Date()));
+        return Integer.parseInt(SF_DD.format(new Date()));
     }
 
     /**
@@ -26,7 +28,7 @@ public class DateUtils {
      * @return int
      */
     public static int getMonth() {
-        return Integer.parseInt(sf_MM.format(new Date()));
+        return Integer.parseInt(SF_MM.format(new Date()));
     }
 
     /**
@@ -35,7 +37,7 @@ public class DateUtils {
      * @return int
      */
     public static int getYear() {
-        return Integer.parseInt(sf_YY.format(new Date()));
+        return Integer.parseInt(SF_YY.format(new Date()));
     }
 
     /**
@@ -44,7 +46,7 @@ public class DateUtils {
      * @return 2021-10-29:15:45:09
      */
     public static String getFormat() {
-        return sf_0.format(new Date());
+        return SF_0.format(new Date());
     }
 
     /**
@@ -56,7 +58,7 @@ public class DateUtils {
      */
     public static long getTimeStamp(String format) {
         try {
-            return sf_0.parse(format).getTime() - System.currentTimeMillis();
+            return SF_0.parse(format).getTime() - System.currentTimeMillis();
         } catch (ParseException e) {
             e.printStackTrace();
         }

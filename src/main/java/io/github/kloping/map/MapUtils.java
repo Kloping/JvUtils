@@ -7,6 +7,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static io.github.kloping.judge.Judge.isNotNull;
 
+/**
+ * @author github-kloping
+ */
 public class MapUtils {
     /**
      * 向Map的K List 添加元素 避免 List 为空的情况

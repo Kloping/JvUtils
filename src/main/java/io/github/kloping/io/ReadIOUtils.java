@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.ArrayBlockingQueue;
 
+/**
+ * @author github-kloping
+ */
 public class ReadIOUtils {
     /**
      * setMode 0 当 写到 byte 13 10 作为 一行 win
@@ -15,10 +18,12 @@ public class ReadIOUtils {
         public OutputStream os;
         private int mode = 0;
 
+        @Override
         public OutputStream getOs() {
             return os;
         }
 
+        @Override
         public Object[] getQue() {
             return que.toArray();
         }
@@ -28,10 +33,12 @@ public class ReadIOUtils {
         private ReadOutputStreamImpl() {
         }
 
+        @Override
         public void setOs(OutputStream os) {
             this.os = os;
         }
 
+        @Override
         public void setMode(int mode) {
             this.mode = mode;
         }
@@ -70,6 +77,7 @@ public class ReadIOUtils {
 
         private int index = 0;
 
+        @Override
         public String readLine() {
             try {
                 return que.take();
@@ -79,6 +87,7 @@ public class ReadIOUtils {
             }
         }
 
+        @Override
         public void clearCache() {
             que.clear();
         }

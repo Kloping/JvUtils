@@ -2,11 +2,15 @@ package io.github.kloping.url;
 
 import java.io.*;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.github.kloping.judge.Judge.isEmpty;
 
+/**
+ * @author github-kloping
+ */
 public class UrlUtils {
     /**
      * 从网络上获取字符
@@ -17,13 +21,7 @@ public class UrlUtils {
      */
     public static String getStringFromHttpUrl(boolean k, String url) {
         try {
-            URLConnection connection = new URL(url).openConnection();
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
-            connection.connect();
-            connection.getOutputStream().flush();
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openConnection().getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line = "";
             while ((line = br.readLine()) != null) {
@@ -138,18 +136,31 @@ public class UrlUtils {
     }
 
     private static void startDownload(String urlStr, ByteArrayOutputStream baos) throws IOException {
-        URLConnection connection = new URL(urlStr).openConnection();
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.addRequestProperty("User-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40");
-        connection.connect();
-        connection.getOutputStream().flush();
-        InputStream is = connection.getInputStream();
+        InputStream is = new URL(urlStr).openStream();
         byte[] bytes = new byte[1024 * 1024];
         int len = -1;
         while ((len = is.read(bytes)) != -1) {
             baos.write(bytes, 0, len);
         }
         is.close();
+    }
+
+    private static final Pattern PATTERN = Pattern.compile("<title>.+</title>");
+
+    /**
+     * @param url
+     * @param title default value
+     * @return
+     * @throws IOException
+     */
+    public static String getTitle(String url, String title) throws IOException {
+        String s = getStringFromHttpUrl(url);
+        Matcher matcher = PATTERN.matcher(s);
+        if (matcher.find()) {
+            s = matcher.group();
+            s = s.substring(7, s.length() - 8);
+            return s;
+        }
+        return title;
     }
 }

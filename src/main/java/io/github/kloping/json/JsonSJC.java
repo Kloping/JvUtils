@@ -12,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 根据JSON生成Java类对象的工具
+ * @author github-kloping
  */
 public class JsonSJC {
-
     /**
      * 解析一个json对象
      *
@@ -54,14 +54,16 @@ public class JsonSJC {
                         String type = parse((JSONObject) jo1, path, getFirstBigW(key), packageN) + "[]";
                         name2type.put(key, type);
                         sb.append("\tprivate ").append(type).append(" ").append(key).append(";\n");
-                    } else SummonArrayType(sb, name2type, key, v, jo1);
+                    } else {
+                        summonArrayType(sb, name2type, key, v, jo1);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 continue;
             }
         }
-        SummonGetterAndSetter(name, sb, name2type);
+        summonGetterAndSetter(name, sb, name2type);
         putStringInFile(sb.toString(), path, name + ".java");
         return name;
     }
@@ -106,7 +108,7 @@ public class JsonSJC {
                         name2type.put(key, type);
                         sb.append("\tprivate ").append(type).append(" ").append(key).append(";\n");
                     } else {
-                        SummonArrayType(sb, name2type, key, v, jo1);
+                        summonArrayType(sb, name2type, key, v, jo1);
                     }
                 }
             } catch (Exception e) {
@@ -115,7 +117,7 @@ public class JsonSJC {
                 continue;
             }
         }
-        SummonGetterAndSetter(name, sb, name2type);
+        summonGetterAndSetter(name, sb, name2type);
         return name;
     }
 
@@ -159,7 +161,7 @@ public class JsonSJC {
                         String type = parse((JSONObject) jo1, path, getFirstBigW(key), packageN, su1) + "[]";
                         name2type.put(key, type);
                         sb.append("\tprivate ").append(type).append(" ").append(key).append(";\n");
-                    } else SummonArrayType(sb, name2type, key, v, jo1);
+                    } else summonArrayType(sb, name2type, key, v, jo1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -167,7 +169,7 @@ public class JsonSJC {
             }
         }
         if (su1)
-            SummonGetterAndSetter(name, sb, name2type);
+            summonGetterAndSetter(name, sb, name2type);
         else sb.append("}");
 
         putStringInFile(sb.toString(), path, name + ".java");
@@ -216,7 +218,7 @@ public class JsonSJC {
                         name2type.put(key, type);
                         sb.append("\tprivate ").append(type).append(" ").append(key).append(";\n");
                     } else {
-                        SummonArrayType(sb, name2type, key, v, jo1);
+                        summonArrayType(sb, name2type, key, v, jo1);
                     }
                 }
             } catch (Exception e) {
@@ -226,12 +228,12 @@ public class JsonSJC {
             }
         }
         if (su)
-            SummonGetterAndSetter(name, sb, name2type);
+            summonGetterAndSetter(name, sb, name2type);
         else sb.append("}");
         return name;
     }
 
-    private static void SummonGetterAndSetter(String name, StringBuilder sb, Map<String, String> name2type) {
+    private static void summonGetterAndSetter(String name, StringBuilder sb, Map<String, String> name2type) {
         for (String key : name2type.keySet()) {
             sb.append("\n");
             String keyN = getFirstBigW(key);
@@ -244,7 +246,7 @@ public class JsonSJC {
         sb.append("}");
     }
 
-    private static void SummonArrayType(StringBuilder sb, Map<String, String> name2type, String key, Object v, Object jo1) {
+    private static void summonArrayType(StringBuilder sb, Map<String, String> name2type, String key, Object v, Object jo1) {
         if (jo1 instanceof String) {
             name2type.put(key, "String[]");
             sb.append("\tprivate String[] ").append(key).append(";\n");

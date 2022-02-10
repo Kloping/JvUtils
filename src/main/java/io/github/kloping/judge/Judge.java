@@ -1,5 +1,8 @@
 package io.github.kloping.judge;
 
+/**
+ * @author github-kloping
+ */
 public class Judge {
 
     /**

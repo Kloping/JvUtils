@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * @author github-kloping
+ */
 public class ReadUtils {
 
     /**

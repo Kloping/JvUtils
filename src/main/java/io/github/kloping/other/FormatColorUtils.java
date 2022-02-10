@@ -2,6 +2,9 @@ package io.github.kloping.other;
 
 import java.awt.*;
 
+/**
+ * @author github-kloping
+ */
 public class FormatColorUtils {
     public static enum FormatColor {
         RESET("\u001B[0m", Color.decode("#FF1C1D2C")),

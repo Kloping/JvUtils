@@ -9,6 +9,9 @@ import java.util.zip.ZipOutputStream;
 import static io.github.kloping.io.ReadUtils.copy;
 import static io.github.kloping.io.ReadUtils.readAll;
 
+/**
+ * @author github-kloping
+ */
 public class JarFileUtils {
 
     /**

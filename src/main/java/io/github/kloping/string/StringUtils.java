@@ -3,6 +3,9 @@ package io.github.kloping.string;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * @author github-kloping
+ */
 public class StringUtils {
     /**
      * 过滤数组中 以 str 开头的 元素

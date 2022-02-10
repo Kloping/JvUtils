@@ -19,7 +19,7 @@ public class NumberUtils {
         String ss = "";
         if (str != null) {
             for (int i = 0; i < str.length(); i++) {
-                int c = str.codePointAt(i);// charAt(i);
+                int c = str.codePointAt(i);
                 if (c >= '0' && c <= '9') {
                     ss += (char) c;
                 }
