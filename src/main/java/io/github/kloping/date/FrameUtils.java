@@ -2,8 +2,10 @@ package io.github.kloping.date;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Timer;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author github-kloping
@@ -12,7 +14,7 @@ import java.util.concurrent.*;
 public class FrameUtils implements Runnable {
     private boolean ignoreErr = true;
     private int eve = 66;
-    private Set<? extends Runnable> frames = new HashSet<>();
+    private Set<Runnable> frames = new HashSet<>();
     private static int index = 0;
     public static final ScheduledExecutorService SERVICE = new ScheduledThreadPoolExecutor(5, new ThreadFactory() {
         @Override
@@ -62,12 +64,19 @@ public class FrameUtils implements Runnable {
         this.eve = eve;
     }
 
-    public Set<? extends Runnable> getFrames() {
+    public Set<Runnable> getFrames() {
         return frames;
     }
 
-    public void setFrames(Set<? extends Runnable> frames) {
+    public void setFrames(Set<Runnable> frames) {
         this.frames = frames;
     }
 
+    public static void setIndex(int index) {
+        FrameUtils.index = index;
+    }
+
+    public static void add(Runnable runnable) {
+        INSTANCE.getFrames().add(runnable);
+    }
 }
