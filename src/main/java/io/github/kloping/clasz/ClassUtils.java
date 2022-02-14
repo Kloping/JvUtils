@@ -95,9 +95,10 @@ public class ClassUtils {
             addURLMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
             addURLMethod.setAccessible(true);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
+
+    private static final String TIPS0 = "class loader can't  cast maybe the JDK version is not 1.8";
 
     /**
      * 此方法仅适用于 java8
@@ -110,6 +111,7 @@ public class ClassUtils {
      * @throws IllegalAccessException
      */
     public static Object addClassFileInSystem(File file) throws MalformedURLException, InvocationTargetException, IllegalAccessException {
+        if (systemClassLoader == null || addURLMethod == null) throw new RuntimeException(TIPS0);
         return addURLMethod.invoke(systemClassLoader, file.getParentFile().toURI().toURL());
     }
 
@@ -124,6 +126,7 @@ public class ClassUtils {
      * @throws IllegalAccessException
      */
     public static Object addJarFileInSystem(File file) throws MalformedURLException, InvocationTargetException, IllegalAccessException {
+        if (systemClassLoader == null || addURLMethod == null) throw new RuntimeException(TIPS0);
         return addURLMethod.invoke(systemClassLoader, file.toURI().toURL());
     }
 

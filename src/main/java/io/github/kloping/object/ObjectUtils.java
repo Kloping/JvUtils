@@ -2,6 +2,8 @@ package io.github.kloping.object;
 
 import io.github.kloping.judge.Judge;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 
 /**
@@ -103,7 +105,6 @@ public class ObjectUtils {
         }
         return clas;
     }
-
 
     /**
      * 判断是否 为 子类型
@@ -218,6 +219,15 @@ public class ObjectUtils {
                     }
                 }
             }
+        }
+    }
+
+    public static <T> T asPossible(Class<T> cla, Object o) {
+        try {
+            Method method = cla.getDeclaredMethod("valueOf", String.class);
+            return (T) method.invoke(null, o.toString());
+        } catch (Exception e) {
+            return (T) o;
         }
     }
 }

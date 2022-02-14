@@ -420,7 +420,7 @@ public class HMLObject {
                         if (t == null) {
                             objects[i] = o;
                         } else {
-                            field.set(t, o);
+                            field.set(t, ObjectUtils.asPossible(cla0, o));
                         }
                     } else if (cla0 == String.class) {
                         String oStr = o.toString();
