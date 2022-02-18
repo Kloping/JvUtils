@@ -6,6 +6,7 @@ import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.github.kloping.common.Public.EXECUTOR_SERVICE;
 import static io.github.kloping.judge.Judge.isEmpty;
 
 /**
@@ -79,15 +80,6 @@ public class UrlUtils {
         }
     }
 
-    public static final ExecutorService THREADS = new ThreadPoolExecutor(15, 15, 1000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(15), new ThreadFactory() {
-        private int i = 0;
-
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread("t" + i++);
-        }
-    });
-
     /**
      * 下载文件
      *
@@ -95,7 +87,7 @@ public class UrlUtils {
      * @param fileName 文件名
      */
     public static void downloadFile(String urlStr, String fileName) {
-        THREADS.execute(() -> {
+        EXECUTOR_SERVICE.execute(() -> {
             try {
                 if (isEmpty(urlStr) || isEmpty(fileName)) return;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -119,7 +111,7 @@ public class UrlUtils {
      * @param file   文件
      */
     public static void downloadFile(String urlStr, File file) {
-        THREADS.execute(() -> {
+        EXECUTOR_SERVICE.execute(() -> {
             try {
                 if (file == null || isEmpty(urlStr)) return;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();

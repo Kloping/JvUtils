@@ -3,13 +3,11 @@ package io.github.kloping.common;
 import java.util.Map;
 import java.util.concurrent.*;
 
+/**
+ * @author github-kloping
+ */
 public class Public {
-    public static final ExecutorService THREADS = new ThreadPoolExecutor(15, 15, 1000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(15), new ThreadFactory() {
-        private int i = 0;
-
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread("t" + i++);
-        }
-    });
+    public static ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(8, 8,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 }
