@@ -1,5 +1,6 @@
 package io.github.kloping.serialize;
 
+import io.github.kloping.annotations.IgnoreField;
 import io.github.kloping.arr.Iterator0;
 import io.github.kloping.clasz.ClassUtils;
 import io.github.kloping.object.ObjectUtils;
@@ -273,6 +274,9 @@ public class HMLObject {
         Set<Field> fields1 = new HashSet<>();
         for (Field field : declaredFields) {
             if (ClassUtils.isStatic(field)) {
+                continue;
+            }
+            if (field.isAnnotationPresent(IgnoreField.class)) {
                 continue;
             }
             fields1.add(field);
