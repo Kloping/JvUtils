@@ -74,4 +74,25 @@ public class ThreeMapImpl<K, V1, V2> implements ThreeMap<K, V1, V2> {
         map1.clear();
         map2.clear();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ThreeMapImpl<?, ?, ?> threeMap = (ThreeMapImpl<?, ?, ?>) o;
+        return Objects.equals(map1, threeMap.map1) && Objects.equals(map2, threeMap.map2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(map1, map2);
+    }
+
+    @Override
+    public String toString() {
+        return "ThreeMapImpl{" +
+                "map1=" + map1 +
+                ", map2=" + map2 +
+                '}';
+    }
 }
