@@ -76,6 +76,22 @@ public class ThreeMapImpl<K, V1, V2> implements ThreeMap<K, V1, V2> {
     }
 
     @Override
+    public Map.Entry<V1, V2> put(K k, V1 v1, V2 v2) {
+        V1 v01 = map1.get(k);
+        V2 v02 = map2.get(k);
+        put1(k, v1);
+        put2(k, v2);
+        return new AbstractMap.SimpleEntry<>(v01, v02);
+    }
+
+    @Override
+    public Map.Entry<V1, V2> get(K k) {
+        V1 v1 = get1(k);
+        V2 v2 = get2(k);
+        return new AbstractMap.SimpleEntry<>(v1, v2);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

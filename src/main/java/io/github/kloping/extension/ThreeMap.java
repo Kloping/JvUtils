@@ -69,4 +69,22 @@ public interface ThreeMap<K, V1, V2> extends Destroyable, Clearable {
      * @return
      */
     public int size();
+
+    /**
+     * put values
+     *
+     * @param k
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public Entry<V1, V2> put(K k, V1 v1, V2 v2);
+
+    /**
+     * get value
+     *
+     * @param k
+     * @return
+     */
+    public Entry<V1, V2> get(K k);
 }
