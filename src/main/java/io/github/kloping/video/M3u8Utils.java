@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  * m3u8下载工具
  * 也可用于 多个连接内容合并
  */
-public class M3U8Utils implements Runnable {
+public class M3u8Utils implements Runnable {
     private ExecutorService threads;
     private String[] urls;
     private CountDownLatch cdl;
@@ -32,7 +32,7 @@ public class M3U8Utils implements Runnable {
      * @param urls    从m3u8文件提取出的下载地址s
      * @param outFile 输出文件
      */
-    public M3U8Utils(String[] urls, File outFile) {
+    public M3u8Utils(String[] urls, File outFile) {
         this.outFile = outFile;
         this.urls = urls;
     }
@@ -44,7 +44,7 @@ public class M3U8Utils implements Runnable {
      * @param threadNum 最大线程数量 默认10
      * @param outFile   输出文件
      */
-    public M3U8Utils(String[] urls, int threadNum, File outFile) {
+    public M3u8Utils(String[] urls, int threadNum, File outFile) {
         this.outFile = outFile;
         this.threadNum = threadNum;
         this.urls = urls;
@@ -57,7 +57,7 @@ public class M3U8Utils implements Runnable {
      * @param outFile 输出文件
      * @throws IOException
      */
-    public M3U8Utils(String m3u8Url, File outFile) throws IOException {
+    public M3u8Utils(String m3u8Url, File outFile) throws IOException {
         this.outFile = outFile;
         this.urls = UrlUtils.getStringFromHttpUrl(true, m3u8Url).split("\n");
     }
@@ -70,7 +70,7 @@ public class M3U8Utils implements Runnable {
      * @param outFile   输出文件
      * @throws IOException
      */
-    public M3U8Utils(String m3u8Url, int threadNum, File outFile) throws IOException {
+    public M3u8Utils(String m3u8Url, int threadNum, File outFile) throws IOException {
         this.outFile = outFile;
         this.urls = StringUtils.filterStartWith(new String(UrlUtils.getBytesFromHttpUrl(m3u8Url)).split("\n"), "#");
         this.threadNum = threadNum;

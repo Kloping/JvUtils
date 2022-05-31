@@ -7,6 +7,9 @@ import java.io.*;
 
 import static io.github.kloping.file.FileUtils.testFile;
 
+/**
+ * @author github-kloping
+ */
 public class SystemUtils {
 
     public static void setOutToFile(String path) throws IOException {
