@@ -30,20 +30,20 @@ public class CronUtils {
 
     public Integer addCronJob(String cron, Job job) {
         try {
+            int id = getId();
             Scheduler scheduler = SCHEDULER_FACTORY.getScheduler();
             JobBuilder jobBuilder = JobBuilder.newJob(CronJob.class);
-            jobBuilder.withIdentity("default-name", "default-group");
+            jobBuilder.withIdentity("default-name-"+id, "default-group-"+id);
             JobDataMap map = new JobDataMap();
             map.put("job", job);
             jobBuilder.setJobData(map);
             JobDetail jobDetail = jobBuilder.build();
             CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity("default-name", "default-group").startNow()
+                    .withIdentity("default-name-"+id, "default-group-"+id).startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(cron))
                     .build();
             scheduler.scheduleJob(jobDetail, cronTrigger);
             scheduler.start();
-            int id = getId();
             id2Scheduler.put(id, scheduler);
             return id;
         } catch (SchedulerException e) {
