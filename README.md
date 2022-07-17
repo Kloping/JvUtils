@@ -5,7 +5,7 @@ Use Maven dependency
     <dependency>
         <groupId>io.github.Kloping</groupId>
         <artifactId>JvUtils</artifactId>
-        <version>0.3.6</version>
+        <version>0.4.5</version>
     </dependency>
 
 - date 日期相关
