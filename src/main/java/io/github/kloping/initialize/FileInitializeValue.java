@@ -1,11 +1,15 @@
 package io.github.kloping.initialize;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import io.github.kloping.object.ObjectUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static io.github.kloping.file.FileUtils.*;
 import static io.github.kloping.judge.Judge.isNotEmpty;
@@ -13,6 +17,8 @@ import static io.github.kloping.object.ObjectUtils.baseToPack;
 
 /**
  * 基于文件的加载值
+ *
+ * @author HRS-Computer
  */
 public class FileInitializeValue {
 
@@ -126,9 +132,29 @@ public class FileInitializeValue {
         return value;
     }
 
+    public static <T> void objs2list(List list, Class<T> cla) {
+        List<T> ls = new ArrayList<>();
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Object o = iterator.next();
+            if (o instanceof JSONObject) {
+                ls.add(((JSONObject) o).toJavaObject(cla));
+            } else if (ObjectUtils.isSuperOrInterface(o.getClass(), cla)) {
+                ls.add((T) o);
+            }
+        }
+        list.clear();
+        list.addAll(ls);
+    }
+
     private static <T> T toValue(String par, T defaultV) {
         try {
-            defaultV = (T) JSONObject.parseObject(par, defaultV.getClass());
+            Object obj = JSON.parse(par);
+            if (obj instanceof JSONObject) {
+                defaultV = (T) ((JSONObject) obj).toJavaObject(defaultV.getClass());
+            } else if (obj instanceof JSONArray) {
+                defaultV = (T) ((JSONArray) obj).toJavaObject(defaultV.getClass());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,8 +174,7 @@ public class FileInitializeValue {
     private static <T> String toPar(T v, boolean format) {
         try {
             if (!format) return toPar(v);
-            String serJson = JSON.toJSONString(v, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
-                    SerializerFeature.WriteDateUseDateFormat);
+            String serJson = JSON.toJSONString(v, true);
             return serJson;
         } catch (Exception e) {
             e.printStackTrace();
