@@ -1,7 +1,6 @@
 package io.github.kloping.initialize;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.github.kloping.object.ObjectUtils;
 
@@ -149,12 +148,7 @@ public class FileInitializeValue {
 
     private static <T> T toValue(String par, T defaultV) {
         try {
-            Object obj = JSON.parse(par);
-            if (obj instanceof JSONObject) {
-                defaultV = (T) ((JSONObject) obj).toJavaObject(defaultV.getClass());
-            } else if (obj instanceof JSONArray) {
-                defaultV = (T) ((JSONArray) obj).toJavaObject(defaultV.getClass());
-            }
+            defaultV = (T) JSONObject.parseObject(par, defaultV.getClass());
         } catch (Exception e) {
             e.printStackTrace();
         }

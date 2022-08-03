@@ -21,12 +21,12 @@ public class ThreeMapImpl<K, V1, V2> implements ThreeMap<K, V1, V2> {
 
     @Override
     public V1 get1(K k) {
-        return map1.get(map1);
+        return map1.get(k);
     }
 
     @Override
     public V2 get2(K k) {
-        return map2.get(map2);
+        return map2.get(k);
     }
 
     @Override
