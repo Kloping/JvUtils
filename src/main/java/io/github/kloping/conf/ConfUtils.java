@@ -11,6 +11,9 @@ import java.util.Map;
 import static io.github.kloping.map.MapUtils.append;
 import static io.github.kloping.object.ObjectUtils.maybeType;
 
+/**
+ * @author HRS-Computer
+ */
 public class ConfUtils {
     /**
      * 加载 文件中 以 k=v 出现 的 键值对到 Map中
