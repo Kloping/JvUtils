@@ -33,7 +33,8 @@ public class SerializerArr {
      */
     public String[] serializer(String str) {
         if (matchers.isEmpty()) return null;
-        init();return start(str).toArray(new String[0]);
+        init();
+        return start(str).toArray(new String[0]);
     }
 
     private int upsize = -1;
@@ -50,8 +51,15 @@ public class SerializerArr {
         String l1 = null;
         while (!(l1 = getNearSt(str)).equals(str)) {
             int i = str.indexOf(l1);
-            if (i == 0) {list.add(l1);str = str.replace(l1, "");
-            } else {String s2 = str.substring(0, i);list.add(s2);list.add(l1);str = str.substring(i + l1.length());}
+            if (i == 0) {
+                list.add(l1);
+                str = str.substring(l1.length());
+            } else {
+                String s2 = str.substring(0, i);
+                list.add(s2);
+                list.add(l1);
+                str = str.substring(i + l1.length());
+            }
         }
         if (!str.isEmpty()) list.add(str);
         return list;
@@ -63,8 +71,12 @@ public class SerializerArr {
         for (Pattern pattern : patterns) {
             Matcher matcher = pattern.matcher(str);
             if (matcher.find()) {
-                String s1 = matcher.group();int i = str.indexOf(s1);
-                if (nearst==-1||i < nearst) {maed = s1;nearst = i;}
+                String s1 = matcher.group();
+                int i = str.indexOf(s1);
+                if (nearst == -1 || i < nearst) {
+                    maed = s1;
+                    nearst = i;
+                }
             }
         }
         if (nearst != -1) return maed;

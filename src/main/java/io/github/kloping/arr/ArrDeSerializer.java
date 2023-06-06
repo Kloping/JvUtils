@@ -49,10 +49,12 @@ public class ArrDeSerializer<A> {
             }
         };
         p2r.put(rule.pattern, rule);
+        if (pattern != EMPTY_PATTERN) sa.add(rule.pattern.pattern());
         return this;
     }
 
     private Map<Pattern, Rule> p2r = new HashMap<>();
+    private SerializerArr sa = new SerializerArr();
 
     /**
      * 开始转换
@@ -66,13 +68,7 @@ public class ArrDeSerializer<A> {
         return list;
     }
 
-    private SerializerArr sa = new SerializerArr();
-
     private void w0(String s, List<A> list) {
-        for (Rule rule : p2r.values()) {
-            if (rule.pattern == EMPTY_PATTERN) continue;
-            sa.add(rule.pattern.pattern());
-        }
         while (true) {
             if (s.length() == 0) break;
             s = w1(s, list);
@@ -92,7 +88,7 @@ public class ArrDeSerializer<A> {
             if (pattern == null) pattern = EMPTY_PATTERN;
             A a = (A) p2r.get(pattern).deserializer(str);
             list.add(a);
-            s = s.replace(str, "");
+            s = s.substring(str.length());
         }
         return s;
     }
