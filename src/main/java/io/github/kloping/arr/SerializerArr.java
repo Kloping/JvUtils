@@ -31,9 +31,9 @@ public class SerializerArr {
      * @param str
      * @return
      */
-    public Object[] serializer(String str) {
+    public String[] serializer(String str) {
         if (matchers.isEmpty()) return null;
-        init();return start(str).toArray();
+        init();return start(str).toArray(new String[0]);
     }
 
     private int upsize = -1;
@@ -45,8 +45,8 @@ public class SerializerArr {
         upsize = matchers.size();
     }
 
-    private List<Object> start(String str) {
-        List<Object> list = new LinkedList<>();
+    private List<String> start(String str) {
+        List<String> list = new LinkedList<>();
         String l1 = null;
         while (!(l1 = getNearSt(str)).equals(str)) {
             int i = str.indexOf(l1);
