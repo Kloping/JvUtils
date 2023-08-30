@@ -1,5 +1,7 @@
 package io.github.kloping.number;
 
+import io.github.kloping.judge.Judge;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,47 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author github-kloping
  */
 public class NumberUtils {
+    private static final String[] SS1 = {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
+    private static final char[] CS1 = {'十', '百', '千', '万', '亿'};
+    public static final char[] CS0 = {'一', '二', '三', '四', '五', '六', '七', '八', '九'};
+    private static final Map<Character, Integer> CHAR_2_INT = new ConcurrentHashMap<>();
+
+    static {
+        int i = 1;
+        for (char c : new Character[]{'一', '二', '三', '四', '五', '六', '七', '八', '九', '十'}) {
+            CHAR_2_INT.put(c, i);
+            i++;
+        }
+    }
+
+    /**
+     * 从字符串获取 整数对象
+     * 若无则 null
+     *
+     * @param str
+     * @return
+     */
+    public static Integer getIntegerFromString(String str) {
+        return getIntegerFromString(str, null);
+    }
+
+    /**
+     * 从字符串获取 整数对象
+     * 若无则 def
+     *
+     * @param str
+     * @param def
+     * @return
+     */
+    public static Integer getIntegerFromString(String str, Integer def) {
+        String ns = findNumberFromString(str);
+        if (Judge.isEmpty(ns)) {
+            return def;
+        } else {
+            return Integer.parseInt(str);
+        }
+    }
+
     /**
      * 从字符串中发现阿拉伯数字
      *
@@ -60,7 +103,6 @@ public class NumberUtils {
         int v3 = (int) dv3;
         return v3;
     }
-
     /**
      * 从字符串中发现 中文数字
      *
@@ -71,7 +113,7 @@ public class NumberUtils {
         List<Character> cs = new ArrayList<>();
         char[] cs1 = str.toCharArray();
         for (char c1 : cs1) {
-            if (char2int.containsKey(c1)) {
+            if (CHAR_2_INT.containsKey(c1)) {
                 cs.add(c1);
                 continue;
             }
@@ -83,7 +125,6 @@ public class NumberUtils {
         return sb.toString();
     }
 
-    private static final String[] numeric = new String[]{"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
 
     /**
      * 阿拉伯转中文
@@ -93,12 +134,12 @@ public class NumberUtils {
      */
     public static String intNumber2ChineseNumber(int num) {
         StringBuilder builder = new StringBuilder();
-        builder.append(numeric[num / 1000]).append("千").
-                append(numeric[num / 100 % 10] + "百").
-                append(numeric[num / 10 % 10] + "十").
-                append(numeric[num % 10]);
+        builder.append(SS1[num / 1000]).append("千").
+                append(SS1[num / 100 % 10] + "百").
+                append(SS1[num / 10 % 10] + "十").
+                append(SS1[num % 10]);
         int index = -1;
-        while ((index = builder.indexOf(numeric[0], index + 1)) != -1) {
+        while ((index = builder.indexOf(SS1[0], index + 1)) != -1) {
             if (index < builder.length() - 1) {
                 builder.deleteCharAt(index + 1);
             }
@@ -109,10 +150,10 @@ public class NumberUtils {
         }
 
         if (builder.length() > 1) {
-            if (builder.indexOf(numeric[0]) == 0) {
+            if (builder.indexOf(SS1[0]) == 0) {
                 builder.deleteCharAt(0);
             }
-            if (builder.indexOf(numeric[0]) == builder.length() - 1) {
+            if (builder.indexOf(SS1[0]) == builder.length() - 1) {
                 builder.deleteCharAt(builder.length() - 1);
             }
 
@@ -122,9 +163,6 @@ public class NumberUtils {
         }
         return builder.toString();
     }
-
-    public static final char[] cnArr = new char[]{'一', '二', '三', '四', '五', '六', '七', '八', '九'};
-    private static final char[] chArr = new char[]{'十', '百', '千', '万', '亿'};
 
     /**
      * 中文数字转阿拉伯
@@ -139,8 +177,8 @@ public class NumberUtils {
         for (int i = 0; i < chineseNumber.length(); i++) {
             boolean b = true;
             char c = chineseNumber.charAt(i);
-            for (int j = 0; j < cnArr.length; j++) {
-                if (c == cnArr[j]) {
+            for (int j = 0; j < CS0.length; j++) {
+                if (c == CS0[j]) {
                     if (0 != count) {
                         result += temp;
                         temp = 1;
@@ -152,8 +190,8 @@ public class NumberUtils {
                 }
             }
             if (b) {
-                for (int j = 0; j < chArr.length; j++) {
-                    if (c == chArr[j]) {
+                for (int j = 0; j < CS1.length; j++) {
+                    if (c == CS1[j]) {
                         switch (j) {
                             case 0:
                                 temp *= 10;
@@ -184,13 +222,16 @@ public class NumberUtils {
         return result;
     }
 
-    private static final Map<Character, Integer> char2int = new ConcurrentHashMap<>();
-
-    static {
-        int i = 1;
-        for (char c : new Character[]{'一', '二', '三', '四', '五', '六', '七', '八', '九', '十'}) {
-            char2int.put(c, i);
-            i++;
-        }
+    /**
+     * 将l除以v 保留 d 位小数
+     *
+     * @param l
+     * @param v
+     * @param d
+     * @return
+     */
+    public String device(Long l, double v, int d) {
+        double f = l / v;
+        return String.format("%." + d + "f", f);
     }
 }
