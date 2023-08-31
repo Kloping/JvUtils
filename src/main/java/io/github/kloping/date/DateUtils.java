@@ -20,7 +20,7 @@ public class DateUtils {
      *
      * @return
      */
-    public Integer getHour() {
+    public static Integer getHour() {
         return Integer.parseInt(SF_HH.format(new Date()));
     }
 
