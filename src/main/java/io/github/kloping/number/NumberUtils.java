@@ -48,7 +48,7 @@ public class NumberUtils {
         if (Judge.isEmpty(ns)) {
             return def;
         } else {
-            return Integer.parseInt(str);
+            return Integer.parseInt(ns);
         }
     }
 
@@ -124,7 +124,6 @@ public class NumberUtils {
         }
         return sb.toString();
     }
-
 
     /**
      * 阿拉伯转中文
