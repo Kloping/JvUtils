@@ -5,6 +5,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author github.kloping
@@ -13,7 +14,7 @@ public class CronUtils {
 
     public static CronUtils INSTANCE = new CronUtils();
 
-    public static final SchedulerFactory SCHEDULER_FACTORY = new StdSchedulerFactory();
+    public static final StdSchedulerFactory SCHEDULER_FACTORY = new StdSchedulerFactory();
 
     public Map<Integer, Scheduler> id2Scheduler = new HashMap<>();
 
@@ -28,20 +29,21 @@ public class CronUtils {
         id2Scheduler.clear();
     }
 
-    public Integer addCronJob(String cron, Job job) {
+    public synchronized Integer addCronJob(String cron, Job job) {
         try {
             int id = getId();
+            Properties props = new Properties();
+            props.put("org.quartz.scheduler.instanceName", "kloping-cron-" + id);
+            props.put("org.quartz.threadPool.threadCount", "10");
+            SCHEDULER_FACTORY.initialize(props);
             Scheduler scheduler = SCHEDULER_FACTORY.getScheduler();
             JobBuilder jobBuilder = JobBuilder.newJob(CronJob.class);
-            jobBuilder.withIdentity("default-name-"+id, "default-group-"+id);
+            jobBuilder.withIdentity("default-name-" + id, "default-group-" + id);
             JobDataMap map = new JobDataMap();
             map.put("job", job);
             jobBuilder.setJobData(map);
             JobDetail jobDetail = jobBuilder.build();
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withIdentity("default-name-"+id, "default-group-"+id).startNow()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(cron))
-                    .build();
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("default-name-" + id, "default-group-" + id).startNow().withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
             scheduler.scheduleJob(jobDetail, cronTrigger);
             scheduler.start();
             id2Scheduler.put(id, scheduler);
@@ -65,9 +67,9 @@ public class CronUtils {
         return null;
     }
 
-    private int id = 0;
+    private static int id = 0;
 
-    public synchronized Integer getId() {
+    public static synchronized Integer getId() {
         return ++id;
     }
 }
