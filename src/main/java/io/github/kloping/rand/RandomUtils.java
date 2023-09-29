@@ -27,6 +27,10 @@ public class RandomUtils {
      * @return
      */
     public static Integer getRandInteger(int from, int end) {
-        return RANDOM.nextInt(from - end) + end;
+        if (from > end)
+            return RANDOM.nextInt(from - end) + end;
+        else if (from < end)
+            return RANDOM.nextInt(end - from) + from;
+        else return from;
     }
 }
