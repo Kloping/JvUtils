@@ -4,8 +4,8 @@ import io.github.kloping.object.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 将集合 或数组 按照指定 Rule 转为 String
@@ -47,7 +47,7 @@ public class ArrSerializer {
         }
     }
 
-    private Map<Class<?>, Rule> maps = new ConcurrentHashMap<>();
+    private Map<Class<?>, Rule> maps = new HashMap<>();
 
     /**
      * 开始转换
@@ -88,7 +88,7 @@ public class ArrSerializer {
                 "";
     }
 
-    private Map<Class<?>, Class<?>> memorySonCls2FatherClsMaps = new ConcurrentHashMap<>();
+    private Map<Class<?>, Class<?>> memorySonCls2FatherClsMaps = new HashMap<>();
 
     private String worker1(Object o) {
         if (memorySonCls2FatherClsMaps.containsKey(o.getClass()))

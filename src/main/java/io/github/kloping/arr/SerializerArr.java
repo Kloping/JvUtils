@@ -1,9 +1,6 @@
 package io.github.kloping.arr;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -12,8 +9,8 @@ import java.util.regex.PatternSyntaxException;
  * 将一组字符串 按照 指定几种正则 分割出元素
  */
 public class SerializerArr {
-    private Set<String> matchers = new LinkedHashSet<>();
-    private Set<Pattern> patterns = new LinkedHashSet<>();
+    private Set<String> matchers = new HashSet<>();
+    private Set<Pattern> patterns = new HashSet<>();
 
     /**
      * 添加一个正则
@@ -68,8 +65,9 @@ public class SerializerArr {
     private String getNearSt(String str) {
         int nearst = -1;
         String maed = null;
-        for (Pattern pattern : patterns) {
-            Matcher matcher = pattern.matcher(str);
+        Iterator<Pattern> iterator = patterns.iterator();
+        while (iterator.hasNext()) {
+            Matcher matcher = iterator.next().matcher(str);
             if (matcher.find()) {
                 String s1 = matcher.group();
                 int i = str.indexOf(s1);
