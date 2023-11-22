@@ -64,7 +64,7 @@ public class SerializerArr {
 
     private String getNearSt(String str) {
         int nearst = -1;
-        String maed = null;
+        String na = null;
         Iterator<Pattern> iterator = patterns.iterator();
         while (iterator.hasNext()) {
             Matcher matcher = iterator.next().matcher(str);
@@ -72,12 +72,12 @@ public class SerializerArr {
                 String s1 = matcher.group();
                 int i = str.indexOf(s1);
                 if (nearst == -1 || i < nearst) {
-                    maed = s1;
+                    na = s1;
                     nearst = i;
                 }
             }
         }
-        if (nearst != -1) return maed;
+        if (nearst != -1) return na;
         else return str;
     }
 }

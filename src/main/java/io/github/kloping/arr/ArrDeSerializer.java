@@ -63,14 +63,16 @@ public class ArrDeSerializer<A> {
      * @return
      */
     public List<A> deserializer(String s) {
-        List<A> list = new LinkedList<>();
-        w0(s, list);
-        return list;
+        synchronized (sa) {
+            List<A> list = new LinkedList<>();
+            w0(s, list);
+            return list;
+        }
     }
 
     private void w0(String s, List<A> list) {
         while (true) {
-            if (s.length() == 0) break;
+            if (s.isEmpty()) break;
             s = w1(s, list);
         }
     }
